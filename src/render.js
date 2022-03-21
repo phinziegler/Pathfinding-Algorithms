@@ -8,7 +8,7 @@ class Render {
     }
 
     renderFrame(tileArray, offset) {
-        this.fillCanvas("white");    // not necessary if you prevent from offsetting beyond bounds
+        this.fillCanvas("black");    // not necessary if you prevent from offsetting beyond bounds
         this.drawVisibleTiles(tileArray, offset);
     }
 
@@ -54,8 +54,6 @@ class Render {
         if (r < 0) {
             r = 0;
         }
-        console.log(r);
-
 
         for(let row = t; row < tileArray.length - b; row++) {
             for(let col = l; col < tileArray[row].length - r; col++) {
@@ -63,9 +61,7 @@ class Render {
                 tileArray[row][col].draw(this.ctx, offset);
             }
         }
-        console.log("drew " + drawn + " tiles.");
-
-
+        // console.log("drew " + drawn + " tiles.");
     }
 }
 

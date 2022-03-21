@@ -9,6 +9,9 @@ class Tile {
     getSize() {
         return this.size;
     }
+    setSize(s) {
+        this.size = s;
+    }
 
     draw(ctx, offset) {
         const X = this.coordinate.getX();

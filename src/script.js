@@ -5,11 +5,12 @@ import { Render } from "./render.js";
 
 let canvas = document.getElementById("canvas");
 let tileArray = [];
-let offset = new Coordinate(0,0);
+let offset;
 let render = new Render(canvas);
 let offsetStart = null;
 let tempOffset = null;
-const n = 500;
+const rows = 5;
+const cols = 5;
 const size = 30;
 
 function init() {
@@ -17,14 +18,15 @@ function init() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     render = new Render(canvas);
-    tileArray = constructTileArray(n, n);
+    tileArray = constructTileArray(rows, cols);
+    setOffset(new Coordinate(0, 0));
 }
 
 function constructTileArray(rows, columns) {
     let output = [];
-    for(let r = 0; r < rows; r++) {
+    for (let r = 0; r < rows; r++) {
         let row = [];
-        for(let c = 0; c < columns; c++) {
+        for (let c = 0; c < columns; c++) {
             let tile = new Tile(size, new Coordinate(c, r));
             row.push(tile);
         }
@@ -43,6 +45,50 @@ function mouseLocation(e) {
     return new Coordinate(x, y);
 }
 
+function setOffset(coordinate) {
+    let overshoot = 0;
+
+    let totalHeight = tileArray[0][0].getSize() * tileArray.length;
+    let totalWidth = tileArray[0][0].getSize() * tileArray[0].length;
+
+    if(coordinate.getX() + canvas.width > totalWidth) {
+        coordinate.setX(totalWidth - canvas.width);
+        overshoot++;
+    }
+    if(coordinate.getY() + canvas.height > totalWidth) {
+        coordinate.setY(totalHeight - canvas.height);
+        overshoot++;
+    }
+    if(coordinate.getY() < 0) {
+        coordinate.setY(0);
+        overshoot++;
+    }
+    if(coordinate.getX() < 0) {
+        coordinate.setX(0);
+        overshoot++;
+    }
+
+    // center
+    if(totalWidth < canvas.width) {
+        console.log("here1");
+        coordinate.setX(-(canvas.width / 2) + (totalWidth / 2));
+        overshoot++;
+    }
+    if(totalHeight < canvas.height) {
+        console.log("here2");
+        coordinate.setY(-(canvas.height / 2) + (totalHeight / 2));
+        overshoot++;
+    }
+
+    console.log(coordinate);
+
+    offset = coordinate;
+
+    if (overshoot > 0) {
+        render.renderFrame(tileArray, offset);
+    }
+}
+
 //////////////////
 /// MOVE TILES ///
 //////////////////
@@ -52,7 +98,7 @@ canvas.addEventListener("mousedown", (e) => {
 });
 
 canvas.addEventListener("mousemove", (e) => {
-    if(offsetStart == null) {
+    if (offsetStart == null) {
         return;
     }
     doOffset(mouseLocation(e));
@@ -60,31 +106,78 @@ canvas.addEventListener("mousemove", (e) => {
 
 canvas.addEventListener("mouseup", (e) => {
     offsetStart = null;
-    offset = tempOffset;
+    setOffset(tempOffset);
 });
 
 function doOffset(coordinate) {
-    if(coordinate == null) {
-        render.renderFrame(tileArray, tempOffset);
-        requestAnimationFrame(doOffset);
-        return;
-    }
+    // if (coordinate == null) {
+    //     render.renderFrame(tileArray, tempOffset);
+    //     requestAnimationFrame(doOffset);
+    //     return;
+    // }
     let changeX = offsetStart.getX() - coordinate.getX();   // so far
     let changeY = offsetStart.getY() - coordinate.getY();   // so far
     let totalX = offset.getX() + changeX;
     let totalY = offset.getY() + changeY;
     tempOffset = new Coordinate(totalX, totalY);
-    
+
     render.renderFrame(tileArray, new Coordinate(totalX, totalY));
 }
 
 ////////////////////////////////////////////////////////////////////////////
 
-document.addEventListener
+document.addEventListener("keydown", (e) => {
+    let upScaleRate = 1.25;
+    let downScaleRate = 1 / upScaleRate;
+
+    switch (e.key) {
+        case "+":
+            scaleTiles(upScaleRate);
+            break;
+        case "-":
+            scaleTiles(downScaleRate);
+            break;
+    }
+});
+
+// scale all tiles, and adjust the offset such that board is scaled around its center
+// NOTE: it turns out thats a shitty way to adjust the scale, it should be based on the center of the window instead
+function scaleTiles(fac) {
+    let oldHeight = tileArray[0][0].getSize() * tileArray.length;
+    let oldWidth = tileArray[0][0].getSize() * tileArray[0].length;
+    tileArray.forEach(row => {
+        row.forEach(tile => {
+            tile.size = tile.size * fac;
+        })
+    });
+    let newHeight = tileArray[0][0].getSize() * tileArray.length;
+    let newWidth = tileArray[0][0].getSize() * tileArray[0].length;
+    let difX = newWidth - oldWidth;
+    let difY = newHeight - oldHeight;
+
+    setOffset(new Coordinate(offset.getX() + (difX / 2), offset.getY() + (difY / 2)));
+    render.renderFrame(tileArray, offset);
+}
+
+let timer;
+window.addEventListener("resize", () => {
+    clearTimeout(timer);
+    timer = setTimeout(doResize, 200);
+})
+
+function doResize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    render = new Render(canvas);
+    render.renderFrame(tileArray, offset);
+}
+
+///////////////
+/// RUNTIME ///
+///////////////
 
 init();
-
-render.renderFrame(tileArray, new Coordinate(0,0));
+render.renderFrame(tileArray, new Coordinate(0, 0));
 let lastTime = 0;
 function loop(time) {
     let deltaTime = (time - lastTime / 1000);   // give change in time in seconds.
@@ -95,4 +188,4 @@ function loop(time) {
 
 loop(0);
 
-    
+
