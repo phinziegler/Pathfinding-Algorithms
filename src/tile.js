@@ -6,6 +6,9 @@ class Tile {
         this.size = size;
         this.coordinate = coordinate;
     }
+    getSize() {
+        return this.size;
+    }
 
     draw(ctx, offset) {
         const X = this.coordinate.getX();

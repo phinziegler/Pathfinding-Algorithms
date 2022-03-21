@@ -9,8 +9,8 @@ let offset = new Coordinate(0,0);
 let render = new Render(canvas);
 let offsetStart = null;
 let tempOffset = null;
-const n = 50;
-const size = 20;
+const n = 500;
+const size = 30;
 
 function init() {
     canvas = document.getElementById("canvas");
@@ -60,11 +60,13 @@ canvas.addEventListener("mousemove", (e) => {
 
 canvas.addEventListener("mouseup", (e) => {
     offsetStart = null;
-    offset = tempOffset
+    offset = tempOffset;
 });
 
 function doOffset(coordinate) {
-    if(offsetStart == null) {
+    if(coordinate == null) {
+        render.renderFrame(tileArray, tempOffset);
+        requestAnimationFrame(doOffset);
         return;
     }
     let changeX = offsetStart.getX() - coordinate.getX();   // so far
@@ -72,8 +74,13 @@ function doOffset(coordinate) {
     let totalX = offset.getX() + changeX;
     let totalY = offset.getY() + changeY;
     tempOffset = new Coordinate(totalX, totalY);
+    
     render.renderFrame(tileArray, new Coordinate(totalX, totalY));
 }
+
+////////////////////////////////////////////////////////////////////////////
+
+document.addEventListener
 
 init();
 
