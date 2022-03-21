@@ -1,7 +1,7 @@
 
-import Coordinate from "./coordinate.js";
-import Tile from "./tile.js";
-import Render from "./render.js";
+import { Coordinate } from "./coordinate.js";
+import { Tile } from "./tile.js";
+import { Render } from "./render.js";
 
 let canvas;
 let tileArray = [];
@@ -15,7 +15,7 @@ function init() {
 
 function constructTileArray(rows, columns) {
     let output = [];
-    for(let r = 0; i < rows; r++) {
+    for(let r = 0; r < rows; r++) {
         let row = [];
         for(let c = 0; c < columns; c++) {
             let tile = new Tile(20, new Coordinate(c, r));  // edit the 20

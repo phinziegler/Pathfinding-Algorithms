@@ -1,6 +1,5 @@
-import Coordinate from "./coordinate";
-
-export default class Render {
+export { Render };
+class Render {
     constructor(canvas) {
         this.canvas = canvas;
         this.ctx = this.canvas.getContext("2d");

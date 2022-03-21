@@ -1,4 +1,5 @@
-export default class Coordinate {
+export { Coordinate };
+class Coordinate {
     constructor(x, y) {
         this.x = x;
         this.y = y;

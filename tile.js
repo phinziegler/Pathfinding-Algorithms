@@ -1,8 +1,6 @@
-import Coordinate from "./coordinate";
-
-// import Position from "./position.js";
-export default class Tile {
-    constructor(size, coordinate,) {
+export { Tile };
+class Tile {
+    constructor(size, coordinate) {
         this.size = size;
         this.coordinate = coordinate;
     }
