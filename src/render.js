@@ -7,7 +7,7 @@ class Render {
         this.height = this.canvas.height;
     }
 
-    RenderFrame(tileArray, offset) {
+    renderFrame(tileArray, offset) {
         this.fillCanvas("white");
         this.drawTiles(tileArray, offset);
     }
@@ -18,8 +18,10 @@ class Render {
     }
 
     drawTiles(tileArray, offset) {
-        tileArray.array.forEach(e => {
-            e.draw(this.ctx);
+        tileArray.forEach(row => {
+            row.forEach(tile => {
+                tile.draw(this.ctx, offset);
+            })
         });
     }
 }

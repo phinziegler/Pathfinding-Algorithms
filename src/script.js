@@ -3,14 +3,21 @@ import { Coordinate } from "./coordinate.js";
 import { Tile } from "./tile.js";
 import { Render } from "./render.js";
 
-let canvas;
+let canvas = document.getElementById("canvas");
 let tileArray = [];
+let offset = new Coordinate(0,0);
+let render = new Render(canvas);
+let offsetStart = null;
+let tempOffset = null;
+const n = 50;
+const size = 20;
 
 function init() {
     canvas = document.getElementById("canvas");
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    tileArray = constructTileArray(100, 100);
+    render = new Render(canvas);
+    tileArray = constructTileArray(n, n);
 }
 
 function constructTileArray(rows, columns) {
@@ -18,7 +25,7 @@ function constructTileArray(rows, columns) {
     for(let r = 0; r < rows; r++) {
         let row = [];
         for(let c = 0; c < columns; c++) {
-            let tile = new Tile(20, new Coordinate(c, r));  // edit the 20
+            let tile = new Tile(size, new Coordinate(c, r));
             row.push(tile);
         }
         output.push(row);
@@ -26,26 +33,59 @@ function constructTileArray(rows, columns) {
     return output;
 }
 
+function mouseLocation(e) {
+    let rect = canvas.getBoundingClientRect();  // abs. size of element
+    let scaleX = canvas.width / rect.width;         // relationship bitmap vs. element for X
+    let scaleY = canvas.height / rect.height;       // relationship bitmap vs. element for Y
 
-// // EVENT HANDLING
-// $(window).on("resize", () => {
-//     canvas.width = $(window).width();
-//     canvas.height = $(window).height();
-//     console.log("here");
-// });
+    let x = Math.floor((e.clientX - rect.left) * scaleX) + 1;
+    let y = Math.floor((e.clientY - rect.top) * scaleY) + 1;
+    return new Coordinate(x, y);
+}
+
+//////////////////
+/// MOVE TILES ///
+//////////////////
+
+canvas.addEventListener("mousedown", (e) => {
+    offsetStart = mouseLocation(e);
+});
+
+canvas.addEventListener("mousemove", (e) => {
+    if(offsetStart == null) {
+        return;
+    }
+    doOffset(mouseLocation(e));
+});
+
+canvas.addEventListener("mouseup", (e) => {
+    offsetStart = null;
+    offset = tempOffset
+});
+
+function doOffset(coordinate) {
+    if(offsetStart == null) {
+        return;
+    }
+    let changeX = offsetStart.getX() - coordinate.getX();   // so far
+    let changeY = offsetStart.getY() - coordinate.getY();   // so far
+    let totalX = offset.getX() + changeX;
+    let totalY = offset.getY() + changeY;
+    tempOffset = new Coordinate(totalX, totalY);
+    render.renderFrame(tileArray, new Coordinate(totalX, totalY));
+}
 
 init();
 
-const render = new Render(canvas);
+render.renderFrame(tileArray, new Coordinate(0,0));
 let lastTime = 0;
 function loop(time) {
     let deltaTime = (time - lastTime / 1000);   // give change in time in seconds.
     lastTime = time;
 
-    render.renderFrame(tileArray);
-
     requestAnimationFrame(loop);
 }
-// loop(0);
+
+loop(0);
 
     
