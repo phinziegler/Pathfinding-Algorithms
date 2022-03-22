@@ -3,6 +3,7 @@
     --color2: #d1d1d1f2;
     --color3: #575757;
     --accent: #d17000;
+    --terniary: #be0000;
 }
 
 * {
@@ -69,5 +70,8 @@
 }
 .toolbar > i:hover {
     cursor: pointer;
+    color: var(--accent);
+}
+.activeTool {
     color: var(--accent);
 }

@@ -7,14 +7,12 @@ class InputHandler {
         });
 
         document.addEventListener("keydown", (e) => {
-            let upScaleRate = 1.25;
-            let downScaleRate = 1 / upScaleRate;
             switch (e.key) {
                 case "+":
-                    engine.scaleTiles(upScaleRate);
+                    engine.zoomIn();
                     break;
                 case "-":
-                    engine.scaleTiles(downScaleRate);
+                    engine.zoomOut();
                     break;
             }
         });

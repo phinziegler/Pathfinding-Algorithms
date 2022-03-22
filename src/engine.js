@@ -14,11 +14,22 @@ class Engine {
         this.offsetStart = null;
         this.tempOffset = new Coordinate(0, 0);
         this.render = render;
+
+        this.painting = false;
     }
 
     // INITIALIZE
     init() {
         this.doResize();
+    }
+
+    // GET TILE ARRAY
+    getTileArray() {
+        return this.tileArray;
+    }
+
+    getOffset() {
+        return this.offset;
     }
 
     // CONSTRUCT TILE ARRAY 
@@ -100,14 +111,74 @@ class Engine {
 
     // MOUSE DOWN
     handleMouseDown(e) {
-        this.offsetStart = this.mouseLocation(e);
+        let tile = this.getTileFromClick(this.mouseLocation(e));
+        switch (this.activeTool) {
+            case "drag":
+                this.offsetStart = this.mouseLocation(e);
+                break;
+            case "wall":
+                tile.doWall();
+                this.render.drawTile(tile, this.offset);
+                this.painting = true;
+                break;
+            case "start":
+                tile.doStart();
+                this.render.drawTile(tile, this.offset);
+                this.painting = true;
+                break;
+            case "goal":
+                tile.doGoal();
+                this.render.drawTile(tile, this.offset);
+                this.painting = true;
+                break;
+            case "erase":
+                tile.doClear();
+                this.render.drawTile(tile, this.offset);
+                this.painting = true;
+                break
+        }
+
+
     }
     // MOUSEMOVE (following mousedown)
     handleMouseMove(e) {
-        if (this.offsetStart == null) {
-            return;
+        let tile = this.getTileFromClick(this.mouseLocation(e));
+        switch (this.activeTool) {
+            case "drag":
+                if (this.offsetStart == null) {
+                    return;
+                }
+                this.doOffset(this.mouseLocation(e));
+                break;
+            case "wall":
+                if (this.painting == false) {
+                    return;
+                }
+                tile.doWall();
+                this.render.drawTile(tile, this.offset);
+                break;
+            case "start":
+                if (this.painting == false) {
+                    return;
+                }
+                tile.doStart();
+                this.render.drawTile(tile, this.offset);
+                break;
+            case "goal":
+                if (this.painting == false) {
+                    return;
+                }
+                tile.doGoal();
+                this.render.drawTile(tile, this.offset);
+                break;
+            case "erase":
+                if (this.painting == false) {
+                    return;
+                }
+                tile.doClear();
+                this.render.drawTile(tile, this.offset);
+                break;
         }
-        this.doOffset(this.mouseLocation(e));
     }
     doOffset(coordinate) {
         let changeX = this.offsetStart.getX() - coordinate.getX();   // so far
@@ -122,10 +193,21 @@ class Engine {
     endMouseDown() {
         this.offset = this.clampOffset(this.tempOffset);
         this.offsetStart = null;
+        this.painting = false;
     }
     //------------------------------------------------------------------------------------------------
 
     // ZOOM IN AND OUT--------------------------------------------------------------------------------
+    zoomIn() {
+        let upScaleRate = 1.25;
+        // let downScaleRate = 1 / upScaleRate;
+        this.scaleTiles(upScaleRate);
+    }
+    zoomOut() {
+        let upScaleRate = 1.25;
+        let downScaleRate = 1 / upScaleRate;
+        this.scaleTiles(downScaleRate);
+    }
     // scale all tiles, and adjust the offset such that board is scaled around its center
     // NOTE: it turns out thats a shitty way to adjust the scale, it should be based on the center of the window instead
     scaleTiles(fac) {
@@ -157,15 +239,22 @@ class Engine {
 
     // GET TILE FROM CLICK ---------------------------------------------------------------------------
     getTileFromClick(coordinate) {
+
+
         let size = this.tileArray[0][0].getSize();
         let X = coordinate.getX();
         let Y = coordinate.getY();
 
         let n = Math.floor((Y + this.offset.getY()) / size);
         let r = Math.floor((X + this.offset.getX()) / size);
+
+        // if(n > this.tileArray.length - 1 || n < 0 || r > this.tileArray[0].length - 1 || r < 0) {
+        //     console.log("here");
+        //     return null;
+        // }
         let tile = this.tileArray[n][r];
 
-        this.colorTile(tile, "#F44", "#911");
+        // this.colorTile(tile, "#F44", "#911");
 
         return tile;
     }

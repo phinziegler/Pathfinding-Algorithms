@@ -11,8 +11,8 @@ const size = 30;
 
 let render = new Render(canvas);
 let engine = new Engine(canvas, rows, cols, size, render);
-new ToolHandler(engine);
-new InputHandler(engine);
+new ToolHandler(engine, render);
+new InputHandler(engine, render);
 
 engine.init();
 

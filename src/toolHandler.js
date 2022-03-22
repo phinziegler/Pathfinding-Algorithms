@@ -11,9 +11,13 @@
 */
 export { ToolHandler };
 class ToolHandler {
-    constructor(engine) {
+    constructor(engine, render) {
         this.accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent');
         this.primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--color1');
+        this.terniaryColor = getComputedStyle(document.documentElement).getPropertyValue('--terniary');
+
+        this.render = render;
+
         this.engine = engine;
         this.activeTool = null;
         this.tools = Array.from(document.querySelectorAll("i"));
@@ -22,40 +26,63 @@ class ToolHandler {
                 this.toolClick(i.id);
             })
         });
+
+        this.makeActive("drag");
     }
 
     toolClick(id) {
-        console.log(id);
+        // console.log(id);
         switch (id) {
             case "clear":           // 1
-                // do something 
+                this.clearTiles();
                 break;
             case "erase":           // 2
-                // do something 
+                this.makeActive(id);
                 break;
             case "wall":            // 3
-                // do something 
+                this.makeActive(id);
                 break;
             case "start":           // 4
-                // do something 
+                this.makeActive(id);
+
                 break;
             case "goal":            // 5
-                // do something 
+                this.makeActive(id);
+
                 break;
             case "zoom-out":        // 6
-                // do something 
+                this.engine.zoomOut();
                 break;
             case "zoom-in":         // 7
-                // do something 
+                this.engine.zoomIn();
                 break;
             case "drag":            // 8
-                // do something 
+                this.makeActive(id);
+
                 break;
             case "search":           // 9
-                // do something 
+
                 break;
             default:
                 console.error("Unimplemented tool '" + id + "' passed to toolClick()");
         }
+    }
+
+    makeActive(id) {
+        if (this.activeTool != null) {
+            this.activeTool.classList.toggle("activeTool");
+        }
+        this.activeTool = document.getElementById(id);
+        this.activeTool.classList.toggle("activeTool");
+        this.engine.setTool(id);
+    }
+
+    clearTiles() {
+        this.engine.getTileArray().forEach(row => {
+            row.forEach(tile => {
+                tile.doClear();
+                this.render.drawTile(tile, this.engine.getOffset());
+            });
+        });
     }
 }
