@@ -2,9 +2,14 @@
 import { Coordinate } from "./coordinate.js";
 import { Tile } from "./tile.js";
 import { Render } from "./render.js";
+import { ToolHandler } from "./toolHandler.js";
+
+export { setTool };
 
 //------------------------------------------------------------------------------------------------
 let canvas = document.getElementById("canvas");
+new ToolHandler();
+let activeTool = null;
 let tileArray = [];
 let offset = new Coordinate(0, 0);
 let render = new Render(canvas);
@@ -46,6 +51,12 @@ function mouseLocation(e) {
     let x = Math.floor((e.clientX - rect.left) * scaleX) + 1;
     let y = Math.floor((e.clientY - rect.top) * scaleY) + 1;
     return new Coordinate(x, y);
+}
+
+// SET TOOL
+function setTool(id) {
+    activeTool = id;
+    console.log(id + " active tool");
 }
 
 // SET OFFSET-------------------------------------------------------------------------------------

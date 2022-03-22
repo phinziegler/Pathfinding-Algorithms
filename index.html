@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,17 +8,33 @@
 
     <link rel="stylesheet" href="style.css">
     <script defer type="module" src="src/script.js"></script>
+    <script src="https://kit.fontawesome.com/73970ed689.js" crossorigin="anonymous"></script>
 
     <title>Pathfinding Algorithms</title>
 </head>
+
 <body>
     <canvas id="canvas"></canvas>
     <section id="intro">
         <h1>Pathfinding Algorithms</h1>
         <p>by Phineas Ziegler</p>
     </section>
-    
+    <div class="toolbar left">
+        <i id="clear"class="far fa-window-close" title="Clear all"></i>
+        <i id="erase"class="fas fa-eraser" title="Erase tile"></i>
+        <i id="wall"class="fas fa-stop" title="Add walls"></i>
+        <hr>
+        <i id="start"class="fas fa-map-marker" title="Place start"></i>
+        <i id="goal"class="fas fa-flag-checkered" title="Place goal"></i>
+    </div>
+    <div class="toolbar right">
+        <i id="zoom-out"class="fas fa-search-minus" title="Zoom out"></i>
+        <i id="zoom-in"class="fas fa-search-plus" title="Zoom in"></i>
+        <hr>
+        <i id="drag"class="fas fa-hand-paper" title="Drag viewport"></i>
+        <hr>
+        <i id="start"class="fas fa-play" title="Begin search"></i>
+    </div>
+
 </body>
-
-
 </html>

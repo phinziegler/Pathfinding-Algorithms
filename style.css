@@ -1,18 +1,29 @@
+:root {
+    --color1: #292929;
+    --color2: #d1d1d1f2;
+    --color3: #575757;
+    --accent: #d17000;
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
     font-family:Arial, Helvetica, sans-serif;
-    color:rgb(41, 41, 41);
+    color:var(--color1);
 }
 
 #intro {
     position: absolute;
-    width: 100%;
+    width: 320px;
+    left: 50%;
+    transform: translateX(-50%);
     text-align: center;
     padding: 10px;
-    background-color: rgba(209, 209, 209, 0.863);
-    border-bottom: 1px solid rgb(87, 87, 87);
+    background-color: var(--color2);
+    border-radius: 0 0 5px 5px;
+    border: 1px solid var(--color3);
+    border-top: none;
     user-select: none;
     pointer-events: none;
 }
@@ -22,4 +33,41 @@
     display: block;
     position: absolute;
     top: 0;
+}
+
+.toolbar {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-items: center;
+    padding: 5px;
+    position: fixed;
+    font-size: 25px;
+    border: 1px solid var(--color3);
+    background-color: var(--color2);
+}
+.left {
+    left: 0;
+    border-radius: 0 5px 5px 0;
+}
+.right {
+    right: 0px;
+    border-radius: 5px 0 0 5px;
+}
+.toolbar > hr {
+    margin: 10px 0 10px 0;
+    width: 100%;
+    border: 1px solid var(--color1);
+    opacity: 50%;
+}
+.toolbar > i {
+    width: 30px;
+    text-align: center;
+    margin: 10px 0 10px 0;
+    transition: color .1s;
+}
+.toolbar > i:hover {
+    cursor: pointer;
+    color: var(--accent);
 }
