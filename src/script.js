@@ -1,27 +1,31 @@
-
+// IMPORTS
 import { Coordinate } from "./coordinate.js";
 import { Tile } from "./tile.js";
 import { Render } from "./render.js";
 
+//------------------------------------------------------------------------------------------------
 let canvas = document.getElementById("canvas");
 let tileArray = [];
 let offset;
 let render = new Render(canvas);
 let offsetStart = null;
 let tempOffset = null;
-const rows = 50;
-const cols = 50;
+const rows = 100;
+const cols = 100;
 const size = 30;
+//------------------------------------------------------------------------------------------------
 
+// INITIALIZE
 function init() {
     canvas = document.getElementById("canvas");
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     render = new Render(canvas);
     tileArray = constructTileArray(rows, cols);
-    setOffset(new Coordinate(0, 0));
+    offset = setOffset(new Coordinate(0, 0));
 }
 
+// CONSTRUCT TILE ARRAY 
 function constructTileArray(rows, columns) {
     let output = [];
     for (let r = 0; r < rows; r++) {
@@ -34,7 +38,7 @@ function constructTileArray(rows, columns) {
     }
     return output;
 }
-
+// GET MOUSE LOCATION FROM EVENT
 function mouseLocation(e) {
     let rect = canvas.getBoundingClientRect();  // abs. size of element
     let scaleX = canvas.width / rect.width;         // relationship bitmap vs. element for X
@@ -45,6 +49,7 @@ function mouseLocation(e) {
     return new Coordinate(x, y);
 }
 
+// SET OFFSET-------------------------------------------------------------------------------------
 function setOffset(coordinate) {
     let overshoot = 0;
 
@@ -70,61 +75,58 @@ function setOffset(coordinate) {
 
     // center
     if(totalWidth < canvas.width) {
-        // console.log("here1");
         coordinate.setX(-(canvas.width / 2) + (totalWidth / 2));
         overshoot++;
     }
     if(totalHeight < canvas.height) {
-        // console.log("here2");
         coordinate.setY(-(canvas.height / 2) + (totalHeight / 2));
         overshoot++;
     }
 
-    // console.log(coordinate);
-
-    offset = coordinate;
-
     if (overshoot > 0) {
-        render.renderFrame(tileArray, offset);
+        render.renderFrame(tileArray, coordinate);
     }
+
+    return coordinate;
 }
+//------------------------------------------------------------------------------------------------
 
 //////////////////
 /// MOVE TILES ///
-//////////////////
+//////////////////--------------------------------------------------------------------------------
 
+// MOUSE DOWN
 canvas.addEventListener("mousedown", (e) => {
     offsetStart = mouseLocation(e);
 });
-
 canvas.addEventListener("mousemove", (e) => {
     if (offsetStart == null) {
         return;
     }
     doOffset(mouseLocation(e));
 });
-
-canvas.addEventListener("mouseup", (e) => {
-    offsetStart = null;
-    setOffset(tempOffset);
-});
-
 function doOffset(coordinate) {
     let changeX = offsetStart.getX() - coordinate.getX();   // so far
     let changeY = offsetStart.getY() - coordinate.getY();   // so far
     let totalX = offset.getX() + changeX;
     let totalY = offset.getY() + changeY;
-    tempOffset = new Coordinate(totalX, totalY);
-
-    render.renderFrame(tileArray, new Coordinate(totalX, totalY));
+    tempOffset = setOffset(new Coordinate(totalX, totalY));
+    render.renderFrame(tileArray, tempOffset);
 }
 
-////////////////////////////////////////////////////////////////////////////
+// END MOUSE DOWN
+canvas.addEventListener("mouseup", () => { endMouseDown(); });
+canvas.addEventListener("mouseleave", () => { endMouseDown(); });
+function endMouseDown() {
+    offsetStart = null;
+    offset = setOffset(tempOffset);
+}
+//------------------------------------------------------------------------------------------------
 
+// ZOOM IN AND OUT--------------------------------------------------------------------------------
 document.addEventListener("keydown", (e) => {
     let upScaleRate = 1.25;
     let downScaleRate = 1 / upScaleRate;
-
     switch (e.key) {
         case "+":
             scaleTiles(upScaleRate);
@@ -134,7 +136,6 @@ document.addEventListener("keydown", (e) => {
             break;
     }
 });
-
 // scale all tiles, and adjust the offset such that board is scaled around its center
 // NOTE: it turns out thats a shitty way to adjust the scale, it should be based on the center of the window instead
 function scaleTiles(fac) {
@@ -150,10 +151,12 @@ function scaleTiles(fac) {
     let difX = newWidth - oldWidth;
     let difY = newHeight - oldHeight;
 
-    setOffset(new Coordinate(offset.getX() + (difX / 2), offset.getY() + (difY / 2)));
+    offset = setOffset(new Coordinate(offset.getX() + (difX / 2), offset.getY() + (difY / 2)));
     render.renderFrame(tileArray, offset);
 }
+//------------------------------------------------------------------------------------------------
 
+// RESIZE ----------------------------------------------------------------------------------------
 let timer;
 window.addEventListener("resize", () => {
     clearTimeout(timer);
@@ -166,7 +169,9 @@ function doResize() {
     render = new Render(canvas);
     render.renderFrame(tileArray, offset);
 }
+//------------------------------------------------------------------------------------------------
 
+// GET TILE FROM CLICK ---------------------------------------------------------------------------
 canvas.addEventListener("click", (e) => {
     console.log(mouseLocation(e));
     getTileFromClick(mouseLocation(e));
@@ -180,19 +185,19 @@ function getTileFromClick(coordinate) {
     let n = Math.floor((Y + offset.getY()) / size);
     let r = Math.floor((X + offset.getX()) / size);
     let tile = tileArray[n][r];
-    console.log(n + ", " + r);
 
-    // REMOVE THIS EVENTUALLY ------------------------------------------------------------------------ <<<<
-    tile.setColor("#F55");
+    // COLOR CLICKED TILE
+    tile.setColor("#F44");
+    tile.setBorderColor("#911");
     render.drawTile(tile, offset);
 
     return tile;
-    
 }
+//-----------------------------------------------------------------------------------------------
 
 ///////////////
 /// RUNTIME ///
-///////////////
+///////////////----------------------------------------------------------------------------------
 
 init();
 render.renderFrame(tileArray, new Coordinate(0, 0));
@@ -205,5 +210,6 @@ function loop(time) {
 }
 
 loop(0);
+//------------------------------------------------------------------------------------------------
 
 

@@ -34,7 +34,7 @@ class Tile {
         ctx.fillStyle = this.borderColor;
         ctx.fillRect(ul.getX(), ul.getY(), this.size, this.size);
         ctx.fillStyle = this.color;
-        const inneroffset = 1; // can scale with some function of size?
-        ctx.fillRect(ul.getX() + inneroffset, ul.getY() + inneroffset, this.size - (inneroffset), this.size - (inneroffset));
+        const inneroffset = 2; // can scale with some function of size?
+        ctx.fillRect(ul.getX() + (inneroffset / 2), ul.getY() + (inneroffset / 2), this.size - (inneroffset), this.size - (inneroffset));
     }
 }
