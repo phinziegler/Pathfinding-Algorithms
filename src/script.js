@@ -6,10 +6,10 @@ import { Render } from "./render.js";
 //------------------------------------------------------------------------------------------------
 let canvas = document.getElementById("canvas");
 let tileArray = [];
-let offset;
+let offset = new Coordinate(0, 0);
 let render = new Render(canvas);
 let offsetStart = null;
-let tempOffset = null;
+let tempOffset = new Coordinate(0, 0);
 const rows = 100;
 const cols = 100;
 const size = 30;
@@ -22,7 +22,6 @@ function init() {
     canvas.height = window.innerHeight;
     render = new Render(canvas);
     tileArray = constructTileArray(rows, cols);
-    offset = clampOffset(new Coordinate(0, 0));
 }
 
 // CONSTRUCT TILE ARRAY 
