@@ -2,21 +2,7 @@
 import { Coordinate } from "./coordinate.js";
 import { Tile } from "./tile.js";
 import { Render } from "./render.js";
-// import { ToolHandler } from "./toolHandler.js";
 
-//------------------------------------------------------------------------------------------------
-// let canvas = document.getElementById("canvas");
-// new ToolHandler();
-// let activeTool = null;
-// let tileArray = [];
-// let offset = new Coordinate(0, 0);
-// let render = new Render(canvas);
-// let offsetStart = null;
-// let tempOffset = new Coordinate(0, 0);
-// const rows = 100;
-// const cols = 100;
-// const size = 30;
-//------------------------------------------------------------------------------------------------
 export { Engine };
 class Engine {
     constructor(canvas, rows, cols, size, render) {
@@ -28,13 +14,8 @@ class Engine {
         this.offsetStart = null;
         this.tempOffset = new Coordinate(0, 0);
         this.render = render;
-
-        // this.rows = rows;
-        // this.cols = cols;
-        // this.size = size;
-
-        // this.init();
     }
+
     // INITIALIZE
     init() {
         this.doResize();
@@ -53,6 +34,7 @@ class Engine {
         }
         return output;
     }
+
     // GET MOUSE LOCATION FROM EVENT
     mouseLocation(e) {
         let rect = canvas.getBoundingClientRect();      // abs. size of element
