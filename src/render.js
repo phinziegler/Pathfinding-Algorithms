@@ -8,7 +8,7 @@ class Render {
     }
 
     renderFrame(tileArray, offset) {
-        // this.fillCanvas("black");    // not necessary if you prevent from offsetting beyond bounds
+        this.fillCanvas("black");    // not necessary if you prevent from offsetting beyond bounds
         this.drawVisibleTiles(tileArray, offset);
     }
 

@@ -118,8 +118,8 @@ function doOffset(coordinate) {
 canvas.addEventListener("mouseup", () => { endMouseDown(); });
 canvas.addEventListener("mouseleave", () => { endMouseDown(); });
 function endMouseDown() {
-    offsetStart = null;
     offset = setOffset(tempOffset);
+    offsetStart = null;
 }
 //------------------------------------------------------------------------------------------------
 
@@ -173,7 +173,6 @@ function doResize() {
 
 // GET TILE FROM CLICK ---------------------------------------------------------------------------
 canvas.addEventListener("click", (e) => {
-    console.log(mouseLocation(e));
     getTileFromClick(mouseLocation(e));
 });
 
