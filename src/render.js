@@ -49,12 +49,15 @@ class Render {
             r = 0;
         }
 
+        let drawn = 0;
         // Draw Tiles
         for(let row = t; row < tileArray.length - b; row++) {
             for(let col = l; col < tileArray[row].length - r; col++) {
                 tileArray[row][col].draw(this.ctx, offset);
+                // drawn++;
             }
         }
+        // console.log(drawn + " tiles drawn");
     }
 }
 
