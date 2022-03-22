@@ -22,7 +22,7 @@ function init() {
     canvas.height = window.innerHeight;
     render = new Render(canvas);
     tileArray = constructTileArray(rows, cols);
-    offset = setOffset(new Coordinate(0, 0));
+    offset = clampOffset(new Coordinate(0, 0));
 }
 
 // CONSTRUCT TILE ARRAY 
@@ -50,7 +50,7 @@ function mouseLocation(e) {
 }
 
 // SET OFFSET-------------------------------------------------------------------------------------
-function setOffset(coordinate) {
+function clampOffset(coordinate) {
     let overshoot = 0;
 
     let totalHeight = tileArray[0][0].getSize() * tileArray.length;
@@ -110,7 +110,7 @@ function doOffset(coordinate) {
     let changeY = offsetStart.getY() - coordinate.getY();   // so far
     let totalX = offset.getX() + changeX;
     let totalY = offset.getY() + changeY;
-    tempOffset = setOffset(new Coordinate(totalX, totalY));
+    tempOffset = clampOffset(new Coordinate(totalX, totalY));
     render.renderFrame(tileArray, tempOffset);
 }
 
@@ -118,7 +118,7 @@ function doOffset(coordinate) {
 canvas.addEventListener("mouseup", () => { endMouseDown(); });
 canvas.addEventListener("mouseleave", () => { endMouseDown(); });
 function endMouseDown() {
-    offset = setOffset(tempOffset);
+    offset = clampOffset(tempOffset);
     offsetStart = null;
 }
 //------------------------------------------------------------------------------------------------
@@ -151,7 +151,7 @@ function scaleTiles(fac) {
     let difX = newWidth - oldWidth;
     let difY = newHeight - oldHeight;
 
-    offset = setOffset(new Coordinate(offset.getX() + (difX / 2), offset.getY() + (difY / 2)));
+    offset = clampOffset(new Coordinate(offset.getX() + (difX / 2), offset.getY() + (difY / 2)));
     render.renderFrame(tileArray, offset);
 }
 //------------------------------------------------------------------------------------------------
