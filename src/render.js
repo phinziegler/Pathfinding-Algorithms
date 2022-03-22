@@ -17,6 +17,7 @@ class Render {
         this.ctx.fillRect(0,0, this.width, this.height);
     }
 
+
     // drawTiles(tileArray, offset) {
     //     tileArray.forEach(row => {
     //         row.forEach(tile => {
@@ -24,6 +25,10 @@ class Render {
     //         })
     //     });
     // }
+
+    drawTile(tile, offset) {
+        tile.draw(this.ctx, offset);
+    }
 
     drawVisibleTiles(tileArray, offset) {
         let drawn = 0;

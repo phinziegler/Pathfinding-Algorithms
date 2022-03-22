@@ -9,8 +9,8 @@ let offset;
 let render = new Render(canvas);
 let offsetStart = null;
 let tempOffset = null;
-const rows = 5;
-const cols = 5;
+const rows = 50;
+const cols = 50;
 const size = 30;
 
 function init() {
@@ -70,17 +70,17 @@ function setOffset(coordinate) {
 
     // center
     if(totalWidth < canvas.width) {
-        console.log("here1");
+        // console.log("here1");
         coordinate.setX(-(canvas.width / 2) + (totalWidth / 2));
         overshoot++;
     }
     if(totalHeight < canvas.height) {
-        console.log("here2");
+        // console.log("here2");
         coordinate.setY(-(canvas.height / 2) + (totalHeight / 2));
         overshoot++;
     }
 
-    console.log(coordinate);
+    // console.log(coordinate);
 
     offset = coordinate;
 
@@ -110,11 +110,6 @@ canvas.addEventListener("mouseup", (e) => {
 });
 
 function doOffset(coordinate) {
-    // if (coordinate == null) {
-    //     render.renderFrame(tileArray, tempOffset);
-    //     requestAnimationFrame(doOffset);
-    //     return;
-    // }
     let changeX = offsetStart.getX() - coordinate.getX();   // so far
     let changeY = offsetStart.getY() - coordinate.getY();   // so far
     let totalX = offset.getX() + changeX;
@@ -170,6 +165,29 @@ function doResize() {
     canvas.height = window.innerHeight;
     render = new Render(canvas);
     render.renderFrame(tileArray, offset);
+}
+
+canvas.addEventListener("click", (e) => {
+    console.log(mouseLocation(e));
+    getTileFromClick(mouseLocation(e));
+});
+
+function getTileFromClick(coordinate) {
+    let size = tileArray[0][0].getSize();
+    let X = coordinate.getX();
+    let Y = coordinate.getY();
+
+    let n = Math.floor((Y + offset.getY()) / size);
+    let r = Math.floor((X + offset.getX()) / size);
+    let tile = tileArray[n][r];
+    console.log(n + ", " + r);
+
+    // REMOVE THIS EVENTUALLY ------------------------------------------------------------------------ <<<<
+    tile.setColor("#F55");
+    render.drawTile(tile, offset);
+
+    return tile;
+    
 }
 
 ///////////////

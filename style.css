@@ -13,12 +13,12 @@
     padding: 10px;
     background-color: rgba(209, 209, 209, 0.863);
     border-bottom: 1px solid rgb(87, 87, 87);
+    user-select: none;
 }
 
 #canvas {
     margin: auto;
     display: block;
-    /* background-color: blue; */
     position: absolute;
     top: 0;
 }
