@@ -17,23 +17,12 @@ class Render {
         this.ctx.fillRect(0,0, this.width, this.height);
     }
 
-
-    // drawTiles(tileArray, offset) {
-    //     tileArray.forEach(row => {
-    //         row.forEach(tile => {
-    //             tile.draw(this.ctx, offset);
-    //         })
-    //     });
-    // }
-
     drawTile(tile, offset) {
         tile.draw(this.ctx, offset);
     }
 
     drawVisibleTiles(tileArray, offset) {
-        let drawn = 0;
         let size = tileArray[0][0].getSize();
-
         let windowHeight = window.innerHeight;
         let windowWidth = window.innerWidth;
 
@@ -60,13 +49,12 @@ class Render {
             r = 0;
         }
 
+        // Draw Tiles
         for(let row = t; row < tileArray.length - b; row++) {
             for(let col = l; col < tileArray[row].length - r; col++) {
-                drawn++;
                 tileArray[row][col].draw(this.ctx, offset);
             }
         }
-        // console.log("drew " + drawn + " tiles.");
     }
 }
 
