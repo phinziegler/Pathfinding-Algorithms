@@ -29,6 +29,9 @@ class Engine {
     }
 
     getOffset() {
+        if(this.tempOffset.getX() != this.offset.getX() && this.tempOffset.getX() != this.offset.getY()) {
+            return this.tempOffset;
+        }
         return this.offset;
     }
 
