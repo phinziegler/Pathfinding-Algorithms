@@ -60,7 +60,6 @@ class Engine {
     // SET TOOL
     setTool(id) {
         this.activeTool = id;
-        // console.log(id + " active tool");
     }
 
     // SET OFFSET-------------------------------------------------------------------------------------
