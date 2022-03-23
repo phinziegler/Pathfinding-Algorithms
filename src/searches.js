@@ -12,6 +12,11 @@ class Search {
 
         this.goalTiles = [];
         this.getGoalTiles(engine.getTileArray());
+
+        this.frontierFrames = [];   // contains the frontier at each step
+        this.visitedFrames = [];    // contains the visited tiles at each step
+        this.solutionFrames = [];   // contains the solutions at each step
+        this.activeFrames = [];
     }
 
     getStartTiles(tileArray) {
@@ -78,15 +83,16 @@ class Search {
 
     // BREADTH FIRST SEARCH
     breadthFirst(tileArray) {
-
         if(this.startTiles == null || this.goalTiles == null) {
             console.log("complete, no solution");
             return;
         }
         this.generateNeighbors(tileArray);
-
+        
         let frontier = new Queue();
         let visited = [];
+        let solutionTiles = [];
+        
         visited.concat(this.startTiles);
 
         this.startTiles.forEach(tile => {
@@ -94,14 +100,21 @@ class Search {
         });
 
         while(!frontier.isEmpty()) {
+
             let v = frontier.dequeue();
             visited.push(v);
+            this.activeFrames.push(v);
+
             if(v.isGoal()) {
-                this.colorVisited(visited);
-                this.colorFrontier(frontier);
-                this.colorPath(v);
                 console.log("found solution");
-                return;                                      // IF YOU RETURN HERE, YOU ONLY REVEAL THE SOLUTION TO THE NEAREST GOAL
+
+                solutionTiles.push(v);
+                if(solutionTiles.length == this.goalTiles.length) {
+                    this.populateFrames(frontier.toArray(), visited, solutionTiles);
+                    this.render.animateSearch(this.frontierFrames, this.visitedFrames, this.solutionFrames, this.activeFrames, this.engine);
+                    return;
+                }
+                // return;  // IF YOU RETURN HERE, YOU ONLY REVEAL THE SOLUTION TO THE NEAREST GOAL
             }
             v.getNeighbors().forEach(neighborTile => {
                 if(!neighborTile.isWall() && !visited.includes(neighborTile)) {     
@@ -111,36 +124,24 @@ class Search {
                     visited.push(neighborTile);
                 }
             });
-        }
 
+
+            this.populateFrames(frontier.toArray(), visited, solutionTiles);
+        }
         console.log("complete");
+        this.render.animateSearch(this.frontierFrames, this.visitedFrames, this.solutionFrames, this.activeFrames, this.engine);
+        return;
     }
 
+    populateFrames(frontier, visited, solutionTiles) {
 
-    // THESE SHOULD BE MOVED TO RENDER.JS
-    colorPath(tile) {
-        let current = tile.getParent();
-        // let color = this.render.randomColor();
-        while(current.getParent() != null) {
-            // console.log(current.id);
-            current.doColored("yellow");
-            this.render.drawTile(current, this.engine.getOffset());
-            current = current.getParent();
-        }
-    }
-    colorFrontier(frontier) {
-        let color = "#FBB";
-        frontier.forEach(tile => {
-            tile.doColored(color);
-            this.render.drawTile(tile, this.engine.getOffset());
-        });
-    }
-    colorVisited(visited) {
-        let color = "#CCC";
-        visited.forEach(tile => {
-            tile.doColored(color);
-            this.render.drawTile(tile, this.engine.getOffset());
-        });
+        let frontierRow = [].concat(frontier);
+        let visitedRow = [].concat(visited);
+        let solutionTilesRow = [].concat(solutionTiles);
+
+        this.frontierFrames.push(frontierRow);
+        this.visitedFrames.push(visitedRow);
+        this.solutionFrames.push(solutionTilesRow);
     }
 
 }

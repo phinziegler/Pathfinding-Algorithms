@@ -5,6 +5,13 @@ class Queue {
     constructor() {
         this.list = new LinkedList();
     }
+    toArray() {
+        let output = [];
+        this.forEach(tile => {
+            output.push(tile);
+        })
+        return output;
+    }
     enqueue(element) {
         this.list.addFront(element);
     }
