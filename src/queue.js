@@ -20,4 +20,11 @@ class Queue {
     length() {
         return this.list.getLength();
     }
+    forEach(func) {
+        for(let i = 0; i < this.length(); i++) {
+            let item = this.dequeue();
+            func(item);
+            this.enqueue(item);
+        }
+    }
 }

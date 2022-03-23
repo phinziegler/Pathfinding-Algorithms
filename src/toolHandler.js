@@ -62,6 +62,7 @@ class ToolHandler {
 
                 break;
             case "search":           // 9
+                this.clearColoredTiles();
                 let search = new Search(this.engine, this.render);
                 search.breadthFirst(this.engine.getTileArray());
                 break;
@@ -83,6 +84,16 @@ class ToolHandler {
         this.engine.getTileArray().forEach(row => {
             row.forEach(tile => {
                 tile.doClear();
+                this.render.drawTile(tile, this.engine.getOffset());
+            });
+        });
+    }
+    clearColoredTiles() {
+        this.engine.getTileArray().forEach(row => {
+            row.forEach(tile => {
+                if(tile.isColored()) {
+                    tile.doClear();
+                }
                 this.render.drawTile(tile, this.engine.getOffset());
             });
         });

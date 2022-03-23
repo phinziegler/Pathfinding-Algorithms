@@ -15,8 +15,9 @@ class Tile {
         this.start = false;
         this.goal = false;
         this.clear = true;
+        this.colored = false;
 
-        this.clearCols = ["white","#777"];
+        this.clearCols = ["white", "#777"];
         this.startCols = ["#4A4", "#252"];
         this.goalCols = ["#A44", "#522"];
         this.wallCols = ["#666", "#333"];
@@ -64,6 +65,9 @@ class Tile {
     isGoal() {
         return this.goal;
     }
+    isColored() {
+        return this.colored;
+    }
 
     draw(ctx, offset) {
         const X = this.coordinate.getX();
@@ -87,6 +91,7 @@ class Tile {
         this.start = false;
         this.goal = false;
         this.clear = true;
+        this.colored = false;
 
         this.color = this.clearCols[0];
         this.borderColor = this.clearCols[1];
@@ -97,6 +102,7 @@ class Tile {
         this.start = false;
         this.goal = false;
         this.clear = false;
+        this.colored = false;
 
         this.color = this.wallCols[0];
         this.borderColor = this.wallCols[1];
@@ -107,6 +113,7 @@ class Tile {
         this.start = true;
         this.goal = false;
         this.clear = false;
+        this.colored = false;
 
         this.color = this.startCols[0];
         this.borderColor = this.startCols[1];
@@ -117,8 +124,18 @@ class Tile {
         this.start = false;
         this.goal = true;
         this.clear = false;
+        this.colored = false;
 
         this.color = this.goalCols[0];
         this.borderColor = this.goalCols[1];
+    }
+
+    doColored(color) {
+        if(!this.isClear()) {
+            return;
+        }
+        this.colored = true;
+        this.color = color;
+        this.borderColor = "grey";
     }
 }
