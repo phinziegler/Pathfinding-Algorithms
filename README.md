@@ -8,14 +8,14 @@ The user will be able to paint walls, startpoints and endpoints, control the ani
 
 ## TODO
 <ol>
-  <li>Allow user to paint data on the canvas.
   <li>Implement search algorithms
     <ul>
-      <li>Breadth First
+      <li>Breadth First (Done)
       <li>(Clamped) Depth First
       <li>Greedy Best First
       <li>A* Search
       <li>Beam Search
       <li>etc
     </ul>
-  <li>Animate searches
+  <li>Animate searches (Done)
+  <li>Make default offset such that the screen is in the middle of the board.
