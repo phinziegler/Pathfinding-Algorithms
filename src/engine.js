@@ -14,6 +14,7 @@ class Engine {
         this.offsetStart = null;
         this.tempOffset = new Coordinate(0, 0);
         this.render = render;
+        this.oldPollLocation;
 
         this.painting = false;
     }
@@ -113,10 +114,13 @@ class Engine {
 
     // MOUSE DOWN
     handleMouseDown(e) {
-        let tile = this.getTileFromClick(this.mouseLocation(e));
+        let coords = this.mouseLocation(e);
+        let tile = this.getTileFromClick(coords);
+        this.oldPollLocation = coords;
+
         switch (this.activeTool) {
             case "drag":
-                this.offsetStart = this.mouseLocation(e);
+                this.offsetStart = coords;
                 break;
             case "wall":
                 tile.doWall();
@@ -144,13 +148,14 @@ class Engine {
     }
     // MOUSEMOVE (following mousedown)
     handleMouseMove(e) {
-        let tile = this.getTileFromClick(this.mouseLocation(e));
+        let coords = this.mouseLocation(e);
+        let tile = this.getTileFromClick(coords);
         switch (this.activeTool) {
             case "drag":
                 if (this.offsetStart == null) {
                     return;
                 }
-                this.doOffset(this.mouseLocation(e));
+                this.doOffset(coords);
                 break;
             case "wall":
                 if (this.painting == false) {
