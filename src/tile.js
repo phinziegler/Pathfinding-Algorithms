@@ -2,9 +2,11 @@ import { Coordinate } from "./coordinate.js";
 
 export { Tile };
 class Tile {
-    constructor(size, coordinate) {
+    constructor(size, coordinate, id) {
         this.size = size;
         this.coordinate = coordinate;
+
+        this.id = id;
 
         this.color = "white";
         this.borderColor = "#777";
@@ -19,7 +21,9 @@ class Tile {
         this.goalCols = ["#A44", "#522"];
         this.wallCols = ["#666", "#333"];
 
-        // this.clear();
+        this.neighbors = [];
+
+        this.parent = null;
     }
 
     getSize() {
@@ -33,6 +37,32 @@ class Tile {
     }
     setBorderColor(color) {
         this.borderColor = color;
+    }
+    setNeighbors(neighbors) {
+        this.neighbors = neighbors;
+    }
+    getNeighbors() {
+        return this.neighbors;
+    }
+    setParent(parent) {
+        this.parent = parent;
+    }
+    getParent() {
+        return this.parent;
+    }
+
+
+    isWall() {
+        return this.wall;
+    }
+    isClear() {
+        return this.clear;
+    }
+    isStart() {
+        return this.start;
+    }
+    isGoal() {
+        return this.goal;
     }
 
     draw(ctx, offset) {

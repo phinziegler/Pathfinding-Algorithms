@@ -1,3 +1,5 @@
+import { Search } from "./searches.js";
+
 /*
     1. clear: clear all tiles
     2. erase: erase a single tile
@@ -31,7 +33,6 @@ class ToolHandler {
     }
 
     toolClick(id) {
-        // console.log(id);
         switch (id) {
             case "clear":           // 1
                 this.clearTiles();
@@ -61,7 +62,8 @@ class ToolHandler {
 
                 break;
             case "search":           // 9
-
+                let search = new Search(this.engine, this.render);
+                search.breadthFirst(this.engine.getTileArray());
                 break;
             default:
                 console.error("Unimplemented tool '" + id + "' passed to toolClick()");

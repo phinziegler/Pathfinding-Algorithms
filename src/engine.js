@@ -38,7 +38,7 @@ class Engine {
         for (let r = 0; r < rows; r++) {
             let row = [];
             for (let c = 0; c < columns; c++) {
-                let tile = new Tile(size, new Coordinate(c, r));
+                let tile = new Tile(size, new Coordinate(c, r), (r + "," + c));
                 row.push(tile);
             }
             output.push(row);
@@ -60,7 +60,7 @@ class Engine {
     // SET TOOL
     setTool(id) {
         this.activeTool = id;
-        console.log(id + " active tool");
+        // console.log(id + " active tool");
     }
 
     // SET OFFSET-------------------------------------------------------------------------------------
@@ -191,8 +191,10 @@ class Engine {
 
     // END MOUSE DOWN
     endMouseDown() {
-        this.offset = this.clampOffset(this.tempOffset);
-        this.offsetStart = null;
+        if(this.activeTool == "drag") {
+            this.offset = this.clampOffset(this.tempOffset);
+            this.offsetStart = null;
+        }
         this.painting = false;
     }
     //------------------------------------------------------------------------------------------------
@@ -239,8 +241,6 @@ class Engine {
 
     // GET TILE FROM CLICK ---------------------------------------------------------------------------
     getTileFromClick(coordinate) {
-
-
         let size = this.tileArray[0][0].getSize();
         let X = coordinate.getX();
         let Y = coordinate.getY();
@@ -248,10 +248,6 @@ class Engine {
         let n = Math.floor((Y + this.offset.getY()) / size);
         let r = Math.floor((X + this.offset.getX()) / size);
 
-        // if(n > this.tileArray.length - 1 || n < 0 || r > this.tileArray[0].length - 1 || r < 0) {
-        //     console.log("here");
-        //     return null;
-        // }
         let tile = this.tileArray[n][r];
 
         // this.colorTile(tile, "#F44", "#911");
