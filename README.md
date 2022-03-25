@@ -8,7 +8,7 @@ The user will be able to paint walls, startpoints and endpoints, control the ani
 
 ## TODO
 <ol>
-  <li>Implement search algorithms
+  <li>Implement search algorithms.
     <ul>
       <li>Breadth First (Done)
       <li>(Clamped) Depth First
@@ -17,5 +17,11 @@ The user will be able to paint walls, startpoints and endpoints, control the ani
       <li>Beam Search
       <li>etc
     </ul>
-  <li>Animate searches (Done)
-  <li>Make default offset such that the screen is in the middle of the board.
+  <li>Animate search. (Done)
+  <li>Ability to move camera while animation occurs.(Done)
+  <li>Make default offset such that the screen is in the middle of the board. (Done)
+  <li>Control animation speed. (Done)
+  <li>When starting a new animation, stop animating any previous animations.
+  <li>Use Set.has() instead of Array.includes() for visited check in BFS, O(1) vs O(n).
+  <li>When painting with mouse, interpolate points to paint between mousemove event locations.
+  <li>Tutorial/info page.
