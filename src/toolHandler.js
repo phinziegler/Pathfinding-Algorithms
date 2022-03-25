@@ -30,6 +30,15 @@ class ToolHandler {
         });
 
         this.makeActive("drag");
+
+    }
+
+    getSpeed() {
+        let speed = document.getElementById("speed");
+        if(speed.value <= parseFloat(0)) {
+            speed.value = "0.001";
+        }
+        return parseFloat(speed.value) * 60;
     }
 
     toolClick(id) {
@@ -59,11 +68,10 @@ class ToolHandler {
                 break;
             case "drag":            // 8
                 this.makeActive(id);
-
                 break;
             case "search":           // 9
                 this.clearColoredTiles();
-                let search = new Search(this.engine, this.render);
+                let search = new Search(this.engine, this.render, this.getSpeed());
                 search.breadthFirst(this.engine.getTileArray());
                 break;
             default:

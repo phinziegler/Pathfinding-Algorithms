@@ -127,29 +127,33 @@ class Render {
     }
         
 
-    animateSearch(frontierFrames, visitedFrames, solutionFrames, activeFrames, engine) {
+    animateSearch(frontierFrames, visitedFrames, solutionFrames, activeFrames, engine, speed) {
+        let msPerFrame = 1000 / speed;  // speed is FPS
         let me = this;
         let iterations = frontierFrames.length;
 
-        let lastTime = 0;
-        let deltaTime = 0;
-        let totalTime = 0;
+        let startTime;
+        let totalTime;
         let i = 0;
-        animate(0)
+        animate();
+
         function animate(time) {
+
+            if(startTime == undefined) {
+                startTime = time;
+            }
+            totalTime = time - startTime;
+
             if(i >= iterations) {
+                me.colorBoard(frontierFrames[iterations - 1], visitedFrames[iterations - 1], solutionFrames[iterations - 1], activeFrames[iterations - 1], engine.getOffset(), engine);
                 return;
             }
-            deltaTime = (time - lastTime)
-            lastTime = time;
-            totalTime += deltaTime;
-
-            // console.log(totalTime);
             
-            if(totalTime >= 60) {   // CAN CONTROL SPEED WITH THIS VALUE
+            if(totalTime >= msPerFrame) {
+                me.colorBoard(frontierFrames[Math.floor(i)], visitedFrames[Math.floor(i)], solutionFrames[Math.floor(i)], activeFrames[Math.floor(i)], engine.getOffset(), engine);
+                i = i + (totalTime / msPerFrame);       // if total time overshoots msPerFrame by double, then i should increase by 2
                 totalTime = 0;
-                me.colorBoard(frontierFrames[i], visitedFrames[i], solutionFrames[i], activeFrames[i], engine.getOffset(), engine);
-                i++;
+                startTime = undefined;
             }
             requestAnimationFrame(animate);
         }

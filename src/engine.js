@@ -14,7 +14,7 @@ class Engine {
         this.offsetStart = null;
         this.tempOffset = new Coordinate(0, 0);
         this.render = render;
-        this.oldPollLocation;
+        this.oldPollLocation;   // would be used for interpolating mousemove
 
         this.painting = false;
     }
@@ -22,6 +22,12 @@ class Engine {
     // INITIALIZE
     init() {
         this.doResize();
+
+        let height = this.tileArray[0][0].getSize() * this.tileArray.length;
+        let width = this.tileArray[0][0].getSize() * this.tileArray[0].length;
+        this.offset = this.clampOffset(new Coordinate((width / 2) - (this.canvas.width / 2), (height / 2) - (this.canvas.height / 2)));
+        this.tempOffset = this.offset;
+        this.render.renderFrame(this.tileArray, this.offset);
     }
 
     // GET TILE ARRAY
@@ -103,7 +109,6 @@ class Engine {
         if (overshoot > 0) {
             this.render.renderFrame(this.tileArray, coordinate);
         }
-
         return coordinate;
     }
     //------------------------------------------------------------------------------------------------
@@ -256,8 +261,6 @@ class Engine {
         let r = Math.floor((X + this.offset.getX()) / size);
 
         let tile = this.tileArray[n][r];
-
-        // this.colorTile(tile, "#F44", "#911");
 
         return tile;
     }

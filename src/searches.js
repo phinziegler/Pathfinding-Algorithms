@@ -2,7 +2,7 @@ import { Queue } from "./queue.js";
 
 export { Search };
 class Search {
-    constructor(engine, render) {
+    constructor(engine, render, speed) {
         this.engine = engine;
         this.render = render;
         // this.tileArray = engine.getTileArray();
@@ -17,6 +17,8 @@ class Search {
         this.visitedFrames = [];    // contains the visited tiles at each step
         this.solutionFrames = [];   // contains the solutions at each step
         this.activeFrames = [];
+
+        this.speed = speed; // in terms of 'state frames per second'
     }
 
     getStartTiles(tileArray) {
@@ -111,7 +113,7 @@ class Search {
                 solutionTiles.push(v);
                 if(solutionTiles.length == this.goalTiles.length) {
                     this.populateFrames(frontier.toArray(), visited, solutionTiles);
-                    this.render.animateSearch(this.frontierFrames, this.visitedFrames, this.solutionFrames, this.activeFrames, this.engine);
+                    this.render.animateSearch(this.frontierFrames, this.visitedFrames, this.solutionFrames, this.activeFrames, this.engine, this.speed);
                     return;
                 }
                 // return;  // IF YOU RETURN HERE, YOU ONLY REVEAL THE SOLUTION TO THE NEAREST GOAL
@@ -129,7 +131,7 @@ class Search {
             this.populateFrames(frontier.toArray(), visited, solutionTiles);
         }
         console.log("complete");
-        this.render.animateSearch(this.frontierFrames, this.visitedFrames, this.solutionFrames, this.activeFrames, this.engine);
+        this.render.animateSearch(this.frontierFrames, this.visitedFrames, this.solutionFrames, this.activeFrames, this.engine, this.speed);
         return;
     }
 
