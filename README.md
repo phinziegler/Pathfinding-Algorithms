@@ -20,6 +20,7 @@ This project allow the user to visualize various search algorithms on a grid, an
   <li>Control animation speed. (Done)
   <li>When starting a new animation, stop animating any previous animations. (Done)
   <li>Use Set.has() instead of Array.includes() for visited check in BFS, O(1) vs O(n).
+  <li>Can change animation speed in the middle of an animation.
   <li>When painting with mouse, interpolate points to paint between mousemove event locations.
   <li>Tutorial/info page.
   <li>Zoom/unzoom should be bound to the center of the window, not the center of the board.
