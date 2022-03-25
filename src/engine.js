@@ -14,7 +14,8 @@ class Engine {
         this.offsetStart = null;
         this.tempOffset = new Coordinate(0, 0);
         this.render = render;
-        this.oldPollLocation;   // would be used for interpolating mousemove
+        this.oldPollLocation;
+        this.mouseDown = false;
 
         this.painting = false;
     }
@@ -122,38 +123,103 @@ class Engine {
         let coords = this.mouseLocation(e);
         let tile = this.getTileFromClick(coords);
         this.oldPollLocation = coords;
+        this.mouseDown = true;
 
+        // NOTE: the repetition of the paint choices is bad code, should use another method.
         switch (this.activeTool) {
             case "drag":
                 this.offsetStart = coords;
+                this.painting = false;
                 break;
             case "wall":
+                if(tile == undefined) {
+                    this.endMouseDown();
+                    return;
+                }
                 tile.doWall();
                 this.render.drawTile(tile, this.offset);
                 this.painting = true;
                 break;
             case "start":
+                if(tile == undefined) {
+                    this.endMouseDown();
+                    return;
+                }
                 tile.doStart();
                 this.render.drawTile(tile, this.offset);
                 this.painting = true;
                 break;
             case "goal":
+                if(tile == undefined) {
+                    this.endMouseDown();
+                    return;
+                }
                 tile.doGoal();
                 this.render.drawTile(tile, this.offset);
                 this.painting = true;
                 break;
             case "erase":
+                if(tile == undefined) {
+                    this.endMouseDown();
+                    return;
+                }
                 tile.doClear();
                 this.render.drawTile(tile, this.offset);
                 this.painting = true;
-                break
+                break;
         }
 
 
     }
     // MOUSEMOVE (following mousedown)
     handleMouseMove(e) {
+        if(this.mouseDown == false) {
+            return;
+        }
         let coords = this.mouseLocation(e);
+        if(this.painting) {
+            let interpolation = this.interpolateMouseMove(this.oldPollLocation, coords);
+            interpolation.forEach(pos => {
+                this.performMouseMove(pos);
+            });
+        }
+        else {
+            this.performMouseMove(coords);
+        }
+        this.oldPollLocation = coords;
+    }
+
+    interpolateMouseMove(old, current) {
+        let oldx = old.getX();
+        let oldy = old.getY();
+        let currx = current.getX();
+        let curry = current.getY();
+
+        let rise = curry - oldy;
+        let run = currx - oldx;
+
+        let distance = Math.sqrt((currx - oldx)**2 + (curry - oldy)**2);
+        let tileSize = this.tileArray[0][0].getSize();
+
+        if(distance < tileSize) {
+            return [current];
+        }
+
+        let toInterp = Math.floor(distance / tileSize) + 3;     // the 3 adds redundancy
+
+        let output = [];
+        for(let i = 1; i < toInterp; i++) {
+            let x = (i * (run / toInterp)) + oldx;
+            let y = (i * (rise / toInterp)) + oldy;
+            output.push(new Coordinate(x, y));
+        }
+
+        console.log(toInterp);
+
+        return output;
+    }
+
+    performMouseMove(coords) {
         let tile = this.getTileFromClick(coords);
         switch (this.activeTool) {
             case "drag":
@@ -207,6 +273,7 @@ class Engine {
             this.offset = this.clampOffset(this.tempOffset);
             this.offsetStart = null;
         }
+        this.mouseDown = false;
         this.painting = false;
     }
     //------------------------------------------------------------------------------------------------

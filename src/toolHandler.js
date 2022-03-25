@@ -36,7 +36,7 @@ class ToolHandler {
 
     getSpeed() {
         let speed = document.getElementById("speed");
-        if(speed.value <= parseFloat(0)) {
+        if (speed.value <= parseFloat(0)) {
             speed.value = "0.001";
         }
         return parseFloat(speed.value) * 60;
@@ -45,6 +45,7 @@ class ToolHandler {
     toolClick(id) {
         switch (id) {
             case "clear":           // 1
+                console.log("here");
                 this.clearTiles();
                 break;
             case "erase":           // 2
@@ -71,17 +72,15 @@ class ToolHandler {
                 this.makeActive(id);
                 break;
             case "search":           // 9
-            this.render.abortAnim();
-            this.clearColoredTiles();
-            let searchElem = document.getElementById("search");
-            searchElem.classList.toggle("fa-stop-circle");
-            // if(!this.render.endAnim()) {
-                if(this.anims % 2 == 0) {
+                this.render.abortAnim();
+                this.clearColoredTiles();
+                let searchElem = document.getElementById("search");
+                searchElem.classList.toggle("fa-stop-circle");
+                if (this.anims % 2 == 0) {
                     let search = new Search(this.engine, this.render, this.getSpeed());
                     search.breadthFirst(this.engine.getTileArray());
                 }
                 this.anims++;
-                // }
                 break;
             default:
                 console.error("Unimplemented tool '" + id + "' passed to toolClick()");
@@ -108,7 +107,7 @@ class ToolHandler {
     clearColoredTiles() {
         this.engine.getTileArray().forEach(row => {
             row.forEach(tile => {
-                if(tile.isColored()) {
+                if (tile.isColored()) {
                     tile.doClear();
                 }
                 this.render.drawTile(tile, this.engine.getOffset());
