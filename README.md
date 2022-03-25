@@ -18,7 +18,7 @@ This project allow the user to visualize various search algorithms on a grid, an
   <li>Ability to move camera while animation occurs.(Done)
   <li>Make default offset such that the screen is in the middle of the board. (Done)
   <li>Control animation speed. (Done)
-  <li>When starting a new animation, stop animating any previous animations.
+  <li>When starting a new animation, stop animating any previous animations. (Done)
   <li>Use Set.has() instead of Array.includes() for visited check in BFS, O(1) vs O(n).
   <li>When painting with mouse, interpolate points to paint between mousemove event locations.
   <li>Tutorial/info page.

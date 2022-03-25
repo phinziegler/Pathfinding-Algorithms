@@ -7,7 +7,35 @@ class Render {
         this.width = this.canvas.width;
         this.height = this.canvas.height;
         this.offset;
+        this.endAnimation = false;
+        this.animating = false;
     }
+
+    canAnim(bool) {
+        this.endAnimation = !bool;
+        // this.canAnim = bool;
+    }
+    endAnim() {
+        return this.endAnimation;
+    }
+
+    isAnimating(bool) {
+        this.animating = bool;
+    }
+
+    abortAnim() {
+        console.log("abort");
+        console.log("in the middle of anim? " + this.animating);
+
+        if(this.animating == true) {
+            this.endAnimation = true;
+        }
+        console.log("endAnim? " + this.endAnimation);
+    }
+
+    // abortAnim() {
+    //     this.endAnimation = false;
+    // }
 
     renderFrame(tileArray, offset) {
         this.fillCanvas("black");    // not necessary if you prevent from offsetting beyond bounds
@@ -128,6 +156,8 @@ class Render {
         
 
     animateSearch(frontierFrames, visitedFrames, solutionFrames, activeFrames, engine, speed) {
+        let render = this;
+
         let msPerFrame = 1000 / speed;  // speed is FPS
         let me = this;
         let iterations = frontierFrames.length;
@@ -138,6 +168,19 @@ class Render {
         animate();
 
         function animate(time) {
+            console.log(render.endAnim());
+            if(render.endAnim()) {
+                console.log("ending anim");
+                render.isAnimating(false);
+                render.canAnim(true);
+                return;
+            }
+
+            if(render.endAnim()) {
+                console.log("magically entered this location");
+            }
+
+            render.isAnimating(true);
 
             if(startTime == undefined) {
                 startTime = time;
@@ -146,6 +189,8 @@ class Render {
 
             if(i >= iterations) {
                 me.colorBoard(frontierFrames[iterations - 1], visitedFrames[iterations - 1], solutionFrames[iterations - 1], activeFrames[iterations - 1], engine.getOffset(), engine);
+                render.isAnimating(false);
+                render.canAnim(true);
                 return;
             }
             

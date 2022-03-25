@@ -30,6 +30,7 @@ class ToolHandler {
         });
 
         this.makeActive("drag");
+        this.anims = 0;
 
     }
 
@@ -70,9 +71,17 @@ class ToolHandler {
                 this.makeActive(id);
                 break;
             case "search":           // 9
-                this.clearColoredTiles();
-                let search = new Search(this.engine, this.render, this.getSpeed());
-                search.breadthFirst(this.engine.getTileArray());
+            this.render.abortAnim();
+            this.clearColoredTiles();
+            let searchElem = document.getElementById("search");
+            searchElem.classList.toggle("fa-stop-circle");
+            // if(!this.render.endAnim()) {
+                if(this.anims % 2 == 0) {
+                    let search = new Search(this.engine, this.render, this.getSpeed());
+                    search.breadthFirst(this.engine.getTileArray());
+                }
+                this.anims++;
+                // }
                 break;
             default:
                 console.error("Unimplemented tool '" + id + "' passed to toolClick()");
