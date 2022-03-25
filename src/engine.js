@@ -248,6 +248,7 @@ class Engine {
         this.canvas.height = window.innerHeight;
         this.render = new Render(canvas);
         this.render.renderFrame(this.tileArray, this.offset);
+        this.offset = this.clampOffset(this.offset);
     }
     //------------------------------------------------------------------------------------------------
 
