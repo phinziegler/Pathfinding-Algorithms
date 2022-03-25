@@ -92,10 +92,14 @@ class Search {
         this.generateNeighbors(tileArray);
         
         let frontier = new Queue();
-        let visited = [];
+        let visited = new Set();
         let solutionTiles = [];
+
+        this.startTiles.forEach(tile => {
+            visited.add(tile);
+        })
         
-        visited.concat(this.startTiles);
+        // visited.concat(this.startTiles);
 
         this.startTiles.forEach(tile => {
             frontier.enqueue(tile);
@@ -104,7 +108,7 @@ class Search {
         while(!frontier.isEmpty()) {
 
             let v = frontier.dequeue();
-            visited.push(v);
+            visited.add(v);
             this.activeFrames.push(v);
 
             if(v.isGoal()) {
@@ -119,11 +123,11 @@ class Search {
                 // return;  // IF YOU RETURN HERE, YOU ONLY REVEAL THE SOLUTION TO THE NEAREST GOAL
             }
             v.getNeighbors().forEach(neighborTile => {
-                if(!neighborTile.isWall() && !visited.includes(neighborTile)) {     
+                if(!neighborTile.isWall() && !visited.has(neighborTile)) {     
                     // dont know runtime of includes(), if its O(1) then this is good, if it is O(n) need a different solution
                     frontier.enqueue(neighborTile);
                     neighborTile.setParent(v);
-                    visited.push(neighborTile);
+                    visited.add(neighborTile);
                 }
             });
 
@@ -138,7 +142,7 @@ class Search {
     populateFrames(frontier, visited, solutionTiles) {
 
         let frontierRow = [].concat(frontier);
-        let visitedRow = [].concat(visited);
+        let visitedRow = Array.from(visited);
         let solutionTilesRow = [].concat(solutionTiles);
 
         this.frontierFrames.push(frontierRow);

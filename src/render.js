@@ -145,6 +145,7 @@ class Render {
     colorVisited(visited, offset) {
         let color = "#CCC";
         visited.forEach(tile => {
+            // console.log(tile.constructor.name)
             tile.doColored(color);
             // this.drawTile(tile, offset);
         });
@@ -168,7 +169,7 @@ class Render {
         animate();
 
         function animate(time) {
-            console.log(render.endAnim());
+            // console.log(render.endAnim());
             if(render.endAnim()) {
                 console.log("ending anim");
                 render.isAnimating(false);
