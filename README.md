@@ -24,3 +24,4 @@ This project allow the user to visualize various search algorithms on a grid, an
   <li>Can change animation speed in the middle of an animation.
   <li>Tutorial/info page.
   <li>Zoom/unzoom should be bound to the center of the window, not the center of the board.
+  <li>Optimize: namely, changing forEach into for loops.
