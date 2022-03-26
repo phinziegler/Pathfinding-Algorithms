@@ -108,7 +108,6 @@ class Search {
         while(!frontier.isEmpty()) {
 
             let v = frontier.dequeue();
-            visited.add(v);
             this.activeFrames.push(v);
 
             if(v.isGoal()) {
@@ -124,7 +123,6 @@ class Search {
             }
             v.getNeighbors().forEach(neighborTile => {
                 if(!neighborTile.isWall() && !visited.has(neighborTile)) {     
-                    // dont know runtime of includes(), if its O(1) then this is good, if it is O(n) need a different solution
                     frontier.enqueue(neighborTile);
                     neighborTile.setParent(v);
                     visited.add(neighborTile);
