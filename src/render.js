@@ -6,41 +6,42 @@ class Render {
         this.ctx = this.canvas.getContext("2d");
         this.width = this.canvas.width;
         this.height = this.canvas.height;
-        this.offset;
         this.endAnimation = false;
         this.animating = false;
+
+        this.speed = parseFloat(document.getElementById("speed").value);
     }
 
+    // Determines the speed that animations occur ---------
+    setSpeed(speed) {
+        this.speed = speed;
+    }
+    getSpeed() {
+        return this.speed;
+    }
+    // ----------------------------------------------------
+
+    // Handle Early Exit on animation ------------------------------------
     canAnim(bool) {
         this.endAnimation = !bool;
-        // this.canAnim = bool;
     }
     endAnim() {
         return this.endAnimation;
     }
-
     isAnimating(bool) {
         this.animating = bool;
     }
-
     abortAnim() {
-        console.log("abort");
-        console.log("in the middle of anim? " + this.animating);
-
         if(this.animating == true) {
             this.endAnimation = true;
         }
-        console.log("endAnim? " + this.endAnimation);
     }
-
-    // abortAnim() {
-    //     this.endAnimation = false;
-    // }
-
+    // -------------------------------------------------------------------
+    
+    // DRAW TILES AND FRAMES ------------------------------------------------------------------------------------
     renderFrame(tileArray, offset) {
         this.fillCanvas("black");    // not necessary if you prevent from offsetting beyond bounds
         this.drawVisibleTiles(tileArray, offset);
-        this.offset = offset;
     }
 
     fillCanvas(color) {
@@ -50,7 +51,6 @@ class Render {
 
     drawTile(tile, offset) {
         tile.draw(this.ctx, offset);
-        this.offset = offset;
     }
 
     drawVisibleTiles(tileArray, offset) {
@@ -90,117 +90,98 @@ class Render {
             }
         }
         // console.log(drawn + " tiles drawn");
-        this.offset = offset;
     }
-
-    randomColor() {
-        let hue = (Math.random() * 40) + 25;
-        let sat = 100;
-        let light = 50 + (Math.random() * 20);
-        let col = "#" + this.hslToHex(hue, sat, light);
-        return col;
-    }
-    hslToHex(h, s, l) {
-        l /= 100;
-        const a = s * Math.min(l, 1 - l) / 100;
-        const f = n => {
-            const k = (n + h / 30) % 12;
-            const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
-            return Math.round(255 * color).toString(16).padStart(2, '0');   // convert to Hex and prefix "0" if needed
-        };
-        const result = `${f(0)}${f(8)}${f(4)}`;
-        return result;
-    }
+    // --------------------------------------------------------------------------------------------------------
 
 
-    colorBoard(frontier, visited, solutionTiles, active, offset, engine) {
-
-        // console.log(solutionTiles);
-        this.colorVisited(visited, offset);
-        this.colorFrontier(frontier, offset);
+    // HELPERS FOR ANIMATE ------------------------------------------------------------------------------------
+    colorBoard(frontier, visited, solutionTiles, active, engine) {
+        this.colorVisited(visited);
+        this.colorFrontier(frontier);
         solutionTiles.forEach(tile => {
-            this.colorPath(tile, offset);
+            this.colorPath(tile);
         });
-        this.colorActive(active, offset);
-        this.renderFrame(engine.getTileArray(), offset);
+        this.colorActive(active);
+        this.renderFrame(engine.getTileArray(), engine.getOffset());
     }
-
-    colorPath(tile, offset) {
+    colorPath(tile) {
         let current = tile.getParent();
-        // let color = this.render.randomColor();
         while(current.getParent() != null) {
             current.doColored("yellow");
-            // this.drawTile(current, offset);
             current = current.getParent();
         }
     }
-    colorFrontier(frontier, offset) {
-        // console.log(frontier);
+    colorFrontier(frontier) {
         let color = "#FBB";
         frontier.forEach(tile => {
             tile.doColored(color);
-            // this.drawTile(tile, offset);
         });
     }
-    colorVisited(visited, offset) {
+    colorVisited(visited) {
         let color = "#CCC";
         visited.forEach(tile => {
-            // console.log(tile.constructor.name)
             tile.doColored(color);
-            // this.drawTile(tile, offset);
         });
     }
-    colorActive(active, offset) {
+    colorActive(active) {
         let color = "#BBF";
         active.doColored(color);
     }
+    // ---------------------------------------------------------------------------------------------------
         
-
-    animateSearch(frontierFrames, visitedFrames, solutionFrames, activeFrames, engine, speed) {
+    // ANIMATE SEARCH FRAMES
+    animateSearch(frontierFrames, visitedFrames, solutionFrames, activeFrames, engine) {
         let render = this;
-
-        let msPerFrame = 1000 / speed;  // speed is FPS
-        let me = this;
         let iterations = frontierFrames.length;
 
         let startTime;
         let totalTime;
         let i = 0;
+        let msPerFrame;
+        let speed = render.getSpeed();
         animate();
 
+        // ANIMATION LOOP
         function animate(time) {
-            // console.log(render.endAnim());
+            // Detect Speed Change
+            if(render.getSpeed() != speed) {
+                totalTime = 0;
+                startTime = undefined;
+                speed = render.getSpeed();
+            }
+            speed = render.getSpeed();
+            msPerFrame = 1000 / speed;
+            
+            // End Animation Early
             if(render.endAnim()) {
-                console.log("ending anim");
                 render.isAnimating(false);
                 render.canAnim(true);
                 return;
             }
-
-            if(render.endAnim()) {
-                console.log("magically entered this location");
-            }
-
             render.isAnimating(true);
 
+            // Occurs on new frame.
             if(startTime == undefined) {
                 startTime = time;
             }
             totalTime = time - startTime;
 
+            // Final Frame
             if(i >= iterations) {
-                me.colorBoard(frontierFrames[iterations - 1], visitedFrames[iterations - 1], solutionFrames[iterations - 1], activeFrames[iterations - 1], engine.getOffset(), engine);
+                render.colorBoard(frontierFrames[iterations - 1], visitedFrames[iterations - 1], solutionFrames[iterations - 1], activeFrames[iterations - 1], engine);
                 render.isAnimating(false);
                 render.canAnim(true);
                 return;
             }
             
+            // Render the next frame.
             if(totalTime >= msPerFrame) {
-                me.colorBoard(frontierFrames[Math.floor(i)], visitedFrames[Math.floor(i)], solutionFrames[Math.floor(i)], activeFrames[Math.floor(i)], engine.getOffset(), engine);
+                render.colorBoard(frontierFrames[Math.floor(i)], visitedFrames[Math.floor(i)], solutionFrames[Math.floor(i)], activeFrames[Math.floor(i)], engine);
                 i = i + (totalTime / msPerFrame);       // if total time overshoots msPerFrame by double, then i should increase by 2
                 totalTime = 0;
                 startTime = undefined;
             }
+
             requestAnimationFrame(animate);
         }
     }

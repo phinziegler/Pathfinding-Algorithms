@@ -17,6 +17,14 @@ class InputHandler {
             }
         });
 
+        document.addEventListener("wheel", (e) => {
+            if(e.wheelDelta > 0) {
+                engine.zoomIn();
+                return;
+            }
+            engine.zoomOut();
+        });
+
         canvas.addEventListener("mousedown", (e) => {
             engine.handleMouseDown(e);
         });

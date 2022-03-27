@@ -2,7 +2,7 @@ import { Queue } from "./queue.js";
 
 export { Search };
 class Search {
-    constructor(engine, render, speed) {
+    constructor(engine, render) {
         this.engine = engine;
         this.render = render;
         // this.tileArray = engine.getTileArray();
@@ -17,8 +17,6 @@ class Search {
         this.visitedFrames = [];    // contains the visited tiles at each step
         this.solutionFrames = [];   // contains the solutions at each step
         this.activeFrames = [];
-
-        this.speed = speed; // in terms of 'state frames per second'
     }
 
     getStartTiles(tileArray) {
@@ -85,38 +83,41 @@ class Search {
 
     // BREADTH FIRST SEARCH
     breadthFirst(tileArray) {
-        if(this.startTiles == null || this.goalTiles == null) {
-            console.log("complete, no solution");
+        // Dont do anything if there are no start tiles
+        if(this.startTiles.length == 0) {
+            console.log("No start position.");
             return;
         }
+
+        // Find the neighbors of each tile.
         this.generateNeighbors(tileArray);
         
+        // Create frontier and visited list
         let frontier = new Queue();
         let visited = new Set();
-        let solutionTiles = [];
-
+        
+        // Populate visited
         this.startTiles.forEach(tile => {
             visited.add(tile);
-        })
-        
-        // visited.concat(this.startTiles);
-
+        });
         this.startTiles.forEach(tile => {
             frontier.enqueue(tile);
         });
 
+        let solutionTiles = [];         // used for render
+
         while(!frontier.isEmpty()) {
 
             let v = frontier.dequeue();
-            this.activeFrames.push(v);
+            this.activeFrames.push(v);  // for render
 
             if(v.isGoal()) {
                 console.log("found solution");
 
                 solutionTiles.push(v);
                 if(solutionTiles.length == this.goalTiles.length) {
-                    this.populateFrames(frontier.toArray(), visited, solutionTiles);
-                    this.render.animateSearch(this.frontierFrames, this.visitedFrames, this.solutionFrames, this.activeFrames, this.engine, this.speed);
+                    this.populateFrames(frontier.toArray(), visited, solutionTiles);        // for render
+                    this.render.animateSearch(this.frontierFrames, this.visitedFrames, this.solutionFrames, this.activeFrames, this.engine);    // for render
                     return;
                 }
                 // return;  // IF YOU RETURN HERE, YOU ONLY REVEAL THE SOLUTION TO THE NEAREST GOAL
@@ -124,21 +125,20 @@ class Search {
             v.getNeighbors().forEach(neighborTile => {
                 if(!neighborTile.isWall() && !visited.has(neighborTile)) {     
                     frontier.enqueue(neighborTile);
-                    neighborTile.setParent(v);
                     visited.add(neighborTile);
+                    neighborTile.setParent(v);      // used to track the path taken to that tile.
                 }
             });
-
 
             this.populateFrames(frontier.toArray(), visited, solutionTiles);
         }
         console.log("complete");
-        this.render.animateSearch(this.frontierFrames, this.visitedFrames, this.solutionFrames, this.activeFrames, this.engine, this.speed);
+        this.render.animateSearch(this.frontierFrames, this.visitedFrames, this.solutionFrames, this.activeFrames, this.engine);
         return;
     }
 
+    // Create render frames
     populateFrames(frontier, visited, solutionTiles) {
-
         let frontierRow = [].concat(frontier);
         let visitedRow = Array.from(visited);
         let solutionTilesRow = [].concat(solutionTiles);

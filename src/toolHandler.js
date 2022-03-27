@@ -19,35 +19,63 @@ class ToolHandler {
         this.terniaryColor = getComputedStyle(document.documentElement).getPropertyValue('--terniary');
 
         this.render = render;
-
         this.engine = engine;
-        this.activeTool = null;
+
+
+        // Add CLICK event handler to all tools.
         this.tools = Array.from(document.querySelectorAll("i"));
         this.tools.forEach(i => {
             i.addEventListener("click", () => {
                 this.toolClick(i.id);
             })
         });
+        this.activeTool = null;
 
+        // Default active tool
         this.makeActive("drag");
+
+        // How many times has the play button been pressed.
         this.anims = 0;
 
+        // SPEED
+        this.speedElem = document.getElementById("speed");
+        this.speedElem.addEventListener("change", (e) => {
+            this.render.setSpeed(this.getRenderSpeed());
+        });
+        this.render.setSpeed(this.getRenderSpeed());
+
     }
 
-    getSpeed() {
-        let speed = document.getElementById("speed");
-        if (speed.value <= parseFloat(0)) {
-            speed.value = "0.001";
+    // set the render objects speed value.
+    getRenderSpeed() {
+        if (parseFloat(this.speedElem.value) <= 0) {
+            this.speedElem.value = "0.0";
         }
-        return parseFloat(speed.value) * 60;
+
+        let outspeed = parseFloat(this.speedElem.value) * 60;
+        return outspeed;
     }
 
+    // What to do when a tool is clicked.
     toolClick(id) {
         switch (id) {
             case "clear":           // 1
                 console.log("here");
                 this.clearTiles();
                 break;
+
+            case "search":          // 9
+                this.render.abortAnim();
+                this.clearColoredTiles();
+                let searchElem = document.getElementById("search");
+                searchElem.classList.toggle("fa-stop-circle");
+                if (this.anims % 2 == 0) {
+                    let search = new Search(this.engine, this.render);
+                    search.breadthFirst(this.engine.getTileArray());
+                }
+                this.anims++;
+                break;
+
             case "erase":           // 2
                 this.makeActive(id);
                 break;
@@ -56,11 +84,9 @@ class ToolHandler {
                 break;
             case "start":           // 4
                 this.makeActive(id);
-
                 break;
             case "goal":            // 5
                 this.makeActive(id);
-
                 break;
             case "zoom-out":        // 6
                 this.engine.zoomOut();
@@ -71,22 +97,10 @@ class ToolHandler {
             case "drag":            // 8
                 this.makeActive(id);
                 break;
-            case "search":           // 9
-                this.render.abortAnim();
-                this.clearColoredTiles();
-                let searchElem = document.getElementById("search");
-                searchElem.classList.toggle("fa-stop-circle");
-                if (this.anims % 2 == 0) {
-                    let search = new Search(this.engine, this.render, this.getSpeed());
-                    search.breadthFirst(this.engine.getTileArray());
-                }
-                this.anims++;
-                break;
-            default:
-                console.error("Unimplemented tool '" + id + "' passed to toolClick()");
         }
     }
 
+    // Set an active tool for the engine to use.
     makeActive(id) {
         if (this.activeTool != null) {
             this.activeTool.classList.toggle("activeTool");
@@ -96,6 +110,7 @@ class ToolHandler {
         this.engine.setTool(id);
     }
 
+    // Clear All tiles of their color/type.
     clearTiles() {
         this.engine.getTileArray().forEach(row => {
             row.forEach(tile => {
@@ -104,6 +119,8 @@ class ToolHandler {
             });
         });
     }
+
+    // Clears tiles without deleted starting and ending points.
     clearColoredTiles() {
         this.engine.getTileArray().forEach(row => {
             row.forEach(tile => {
