@@ -199,13 +199,9 @@ class Engine {
         let run = currx - oldx;
 
         let distance = Math.sqrt((currx - oldx)**2 + (curry - oldy)**2);
-        let tileSize = this.tileArray[0][0].getSize();
+        // let tileSize = this.tileArray[0][0].getSize();
 
-        if(distance < tileSize) {
-            return [current];
-        }
-
-        let toInterp = Math.floor(distance / tileSize) + 3;     // the 3 adds redundancy
+        let toInterp = (Math.floor(distance)) + 1;
 
         let output = [];
         for(let i = 1; i < toInterp; i++) {
@@ -213,8 +209,7 @@ class Engine {
             let y = (i * (rise / toInterp)) + oldy;
             output.push(new Coordinate(x, y));
         }
-
-        console.log(toInterp);
+        // console.log(toInterp);
 
         return output;
     }
