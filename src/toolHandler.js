@@ -71,7 +71,8 @@ class ToolHandler {
                 searchElem.classList.toggle("fa-stop-circle");
                 if (this.anims % 2 == 0) {
                     let search = new Search(this.engine, this.render);
-                    search.breadthFirst(this.engine.getTileArray());
+                    // search.breadthFirst(this.engine.getTileArray());
+                    search.depthFirst(this.engine.getTileArray());
                 }
                 this.anims++;
                 break;

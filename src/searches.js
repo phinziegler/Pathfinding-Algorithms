@@ -115,6 +115,8 @@ class Search {
                 console.log("found solution");
 
                 solutionTiles.push(v);
+
+                // end?
                 if(solutionTiles.length == this.goalTiles.length) {
                     this.populateFrames(frontier.toArray(), visited, solutionTiles);        // for render
                     this.render.animateSearch(this.frontierFrames, this.visitedFrames, this.solutionFrames, this.activeFrames, this.engine);    // for render
@@ -131,6 +133,69 @@ class Search {
             });
 
             this.populateFrames(frontier.toArray(), visited, solutionTiles);
+        }
+        console.log("complete");
+        this.render.animateSearch(this.frontierFrames, this.visitedFrames, this.solutionFrames, this.activeFrames, this.engine);
+        return;
+    }
+
+    /* DEPTH FIRST
+    1. Start by putting any one of the graph's vertices on top of a stack.
+    2. Take the top item of the stack and add it to the visited list.
+    3. Create a list of that vertex's adjacent nodes. Add the ones which aren't in the visited list to the top of the stack.
+    4. Keep repeating steps 2 and 3 until the stack is empty. */
+    depthFirst(tileArray) {
+        if(this.startTiles.length == 0) {
+            console.log("No start position.");
+            return;
+        }
+
+        let stack = []; // use push() and pop() --> this is the frontier
+        let visited = new Set();
+
+        this.generateNeighbors(tileArray);
+
+        this.startTiles.forEach(tile => {
+            visited.add(tile);
+        });
+        this.startTiles.forEach(tile => {
+            stack.push(tile);
+        });
+
+        let solutionTiles = [];
+
+        while(stack.length > 0) {
+            // console.log("here1");
+
+            let v = stack.pop();
+            visited.add(v);
+
+            this.activeFrames.push(v);
+
+            if(v.isGoal()) {
+                console.log("found solution");
+                solutionTiles.push(v);
+
+                // End?
+                if(solutionTiles.length == this.goalTiles.length) {
+                    this.populateFrames(stack, visited, solutionTiles);        // for render
+                    this.render.animateSearch(this.frontierFrames, this.visitedFrames, this.solutionFrames, this.activeFrames, this.engine);    // for render
+                    return;
+                }
+            }
+
+            // console.log(v.getNeighbors());
+            v.getNeighbors().forEach(neighborTile => {
+                if(!neighborTile.isWall() && !visited.has(neighborTile)) {   
+
+                    stack.push(neighborTile);
+                    // console.log("here2");
+                    // visited.add(neighborTile);
+                    neighborTile.setParent(v);      // used to track the path taken to that tile.
+                }
+            });
+
+            this.populateFrames(stack, visited, solutionTiles);
         }
         console.log("complete");
         this.render.animateSearch(this.frontierFrames, this.visitedFrames, this.solutionFrames, this.activeFrames, this.engine);
