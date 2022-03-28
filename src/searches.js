@@ -107,7 +107,6 @@ class Search {
         let solutionTiles = [];         // used for render
 
         while(!frontier.isEmpty()) {
-
             let v = frontier.dequeue();
             this.activeFrames.push(v);  // for render
 
@@ -119,7 +118,7 @@ class Search {
                 // end?
                 if(solutionTiles.length == this.goalTiles.length) {
                     this.populateFrames(frontier.toArray(), visited, solutionTiles);        // for render
-                    this.render.animateSearch(this.frontierFrames, this.visitedFrames, this.solutionFrames, this.activeFrames, this.engine);    // for render
+                    this.render.animateSearch(this.frontierFrames, this.visitedFrames, this.solutionFrames, this.activeFrames, this.engine, "breadthFirst");    // for render
                     return;
                 }
                 // return;  // IF YOU RETURN HERE, YOU ONLY REVEAL THE SOLUTION TO THE NEAREST GOAL
@@ -135,7 +134,7 @@ class Search {
             this.populateFrames(frontier.toArray(), visited, solutionTiles);
         }
         console.log("complete");
-        this.render.animateSearch(this.frontierFrames, this.visitedFrames, this.solutionFrames, this.activeFrames, this.engine);
+        this.render.animateSearch(this.frontierFrames, this.visitedFrames, this.solutionFrames, this.activeFrames, this.engine, "breadthFirst");
         return;
     }
 
@@ -179,7 +178,7 @@ class Search {
                 // End?
                 if(solutionTiles.length == this.goalTiles.length) {
                     this.populateFrames(stack, visited, solutionTiles);        // for render
-                    this.render.animateSearch(this.frontierFrames, this.visitedFrames, this.solutionFrames, this.activeFrames, this.engine);    // for render
+                    this.render.animateSearch(this.frontierFrames, this.visitedFrames, this.solutionFrames, this.activeFrames, this.engine, "depthFirst");    // for render
                     return;
                 }
             }
@@ -198,7 +197,7 @@ class Search {
             this.populateFrames(stack, visited, solutionTiles);
         }
         console.log("complete");
-        this.render.animateSearch(this.frontierFrames, this.visitedFrames, this.solutionFrames, this.activeFrames, this.engine);
+        this.render.animateSearch(this.frontierFrames, this.visitedFrames, this.solutionFrames, this.activeFrames, this.engine, "depthFirst");
         return;
     }
 

@@ -95,9 +95,21 @@ class Render {
 
 
     // HELPERS FOR ANIMATE ------------------------------------------------------------------------------------
-    colorBoard(frontier, visited, solutionTiles, active, engine) {
-        this.colorVisited(visited);
-        this.colorFrontier(frontier);
+    colorBoard(frontier, visited, solutionTiles, active, engine, pattern) {
+        switch(pattern) {
+            case "breadthFirst":
+                this.colorVisited(visited);
+                this.colorFrontier(frontier);
+                break;
+            case "depthFirst":
+                this.colorFrontier(frontier);
+                this.colorVisited(visited);
+                break;
+            case "bestFirst":
+                break;
+            case "aStar":
+                break;
+        }
         solutionTiles.forEach(tile => {
             this.colorPath(tile);
         });
@@ -130,7 +142,7 @@ class Render {
     // ---------------------------------------------------------------------------------------------------
         
     // ANIMATE SEARCH FRAMES
-    animateSearch(frontierFrames, visitedFrames, solutionFrames, activeFrames, engine) {
+    animateSearch(frontierFrames, visitedFrames, solutionFrames, activeFrames, engine, pattern) {
         let render = this;
         let iterations = frontierFrames.length;
 
@@ -168,7 +180,7 @@ class Render {
 
             // Final Frame
             if(i >= iterations) {
-                render.colorBoard(frontierFrames[iterations - 1], visitedFrames[iterations - 1], solutionFrames[iterations - 1], activeFrames[iterations - 1], engine);
+                render.colorBoard(frontierFrames[iterations - 1], visitedFrames[iterations - 1], solutionFrames[iterations - 1], activeFrames[iterations - 1], engine, pattern);
                 render.isAnimating(false);
                 render.canAnim(true);
                 return;
@@ -176,7 +188,7 @@ class Render {
             
             // Render the next frame.
             if(totalTime >= msPerFrame) {
-                render.colorBoard(frontierFrames[Math.floor(i)], visitedFrames[Math.floor(i)], solutionFrames[Math.floor(i)], activeFrames[Math.floor(i)], engine);
+                render.colorBoard(frontierFrames[Math.floor(i)], visitedFrames[Math.floor(i)], solutionFrames[Math.floor(i)], activeFrames[Math.floor(i)], engine, pattern);
                 i = i + (totalTime / msPerFrame);       // if total time overshoots msPerFrame by double, then i should increase by 2
                 totalTime = 0;
                 startTime = undefined;

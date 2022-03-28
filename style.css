@@ -68,20 +68,29 @@
     margin: 10px 0 10px 0;
     transition: color .1s;
 }
-.toolbar > input {
-    margin: 0 0 10px 0;
-    text-align: center;
-    width: 30px;
-    transition: width .2s;
-}
- .toolbar > input:focus,
- .toolbar > input:hover {
-    width: 70px;
-}
 .toolbar > i:hover {
     cursor: pointer;
     color: var(--accent);
 }
 .activeTool {
     color: var(--accent);
+}
+
+.toolbar > div > input {
+    text-align: center;
+}
+
+.toolbar > div > select {
+    user-select: none;
+    margin: 5px 0 10px 0;
+}
+
+#options {
+    width: 30px;
+    display: flex;
+    flex-direction: column;
+    transition: width 0.2s;
+}
+#options:hover {
+    width: 100px;
 }

@@ -44,6 +44,9 @@ class ToolHandler {
         });
         this.render.setSpeed(this.getRenderSpeed());
 
+        // Algorithm Switcher
+        this.algoElem = document.getElementById("algorithm");
+
     }
 
     // set the render objects speed value.
@@ -71,8 +74,20 @@ class ToolHandler {
                 searchElem.classList.toggle("fa-stop-circle");
                 if (this.anims % 2 == 0) {
                     let search = new Search(this.engine, this.render);
-                    // search.breadthFirst(this.engine.getTileArray());
-                    search.depthFirst(this.engine.getTileArray());
+                    switch (this.algoElem.value) {
+                        case "breadthFirst":
+                            search.breadthFirst(this.engine.getTileArray());
+                            break;
+                        case "depthFirst":
+                            search.depthFirst(this.engine.getTileArray());
+                            break;
+                        case "bestFirst":
+                            // search.breadthFirst(this.engine.getTileArray());
+                            break;
+                        case "aStar":
+                            // search.depthFirst(this.engine.getTileArray());
+                            break;
+                    }
                 }
                 this.anims++;
                 break;

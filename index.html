@@ -34,7 +34,15 @@
         <i id="drag"class="fas fa-hand-paper" title="Drag viewport"></i>
         <hr>
         <i id="search"class="fas fa-play" title="Begin search"></i>
-        <input id="speed"type="number"value="1"min="0"step=".5"title="Animation rate (x60 fps)">
+        <div id="options">
+            <input id="speed"type="number"value="1"min="0"step=".5"title="Animation speed (x60 fps)">
+            <select name="Algorithm" id="algorithm"title="Search algorithm">
+                <option value="breadthFirst">Breadth First</option>
+                <option value="depthFirst">Depth First</option>
+                <option value="bestFirst">Best First</option>
+                <option value="aStar">A*</option>
+            </select>
+        </div>
     </div>
 
 </body>
