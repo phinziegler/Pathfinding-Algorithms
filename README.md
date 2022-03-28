@@ -22,7 +22,7 @@ This project allow the user to visualize various search algorithms on a grid, an
   <li>Use Set.has() instead of Array.includes() for visited check in BFS, O(1) vs O(n). (Done)
   <li>When painting with mouse, interpolate points to paint between mousemove event locations. (Done)
   <li>Can change animation speed in the middle of an animation. (Done)
-  <li>Add a way to select between search algorithms.
+  <li>Add a way to select between search algorithms. (Done)
   <li>Tutorial/info page.
   <li>Zoom/unzoom should be bound to the center of the window, not the center of the board.
   <li>Optimize: namely, changing forEach into for loops.
