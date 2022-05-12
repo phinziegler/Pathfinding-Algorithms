@@ -1,4 +1,4 @@
-import { Coordinate } from "./coordinate.js";
+import { Coordinate } from "./dataStructures/coordinate.js";
 
 export { Tile };
 class Tile {

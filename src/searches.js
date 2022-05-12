@@ -1,4 +1,4 @@
-import { Queue } from "./queue.js";
+import { Queue } from "./dataStructures/queue.js";
 
 export { Search };
 class Search {
@@ -210,6 +210,33 @@ class Search {
         this.frontierFrames.push(frontierRow);
         this.visitedFrames.push(visitedRow);
         this.solutionFrames.push(solutionTilesRow);
+    }
+
+    aStar(tileArray) {
+         // Dont do anything if there are no start tiles
+         if(this.startTiles.length == 0) {
+            console.log("No start position.");
+            return;
+        }
+
+        // Find the neighbors of each tile.
+        this.generateNeighbors(tileArray);
+        
+        // Create frontier and visited list
+        let frontier = new Queue();
+        let visited = new Set();
+        
+        // Populate visited
+        this.startTiles.forEach(tile => {
+            visited.add(tile);
+        });
+        this.startTiles.forEach(tile => {
+            frontier.enqueue(tile);
+        });
+    }
+
+    heuristic(tile) {
+
     }
 
 }

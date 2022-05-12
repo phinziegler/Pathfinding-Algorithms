@@ -1,5 +1,5 @@
 // IMPORTS
-import { Coordinate } from "./coordinate.js";
+import { Coordinate } from "./dataStructures/coordinate.js";
 import { Tile } from "./tile.js";
 import { Render } from "./render.js";
 
