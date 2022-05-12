@@ -1,6 +1,7 @@
 import { Engine } from "./engine.js";
 import { InputHandler } from "./inputHandler.js";
 import { LinkedList } from "./dataStructures/linkedList.js";
+import { PriorityQueue } from "./dataStructures/priorityQueue.js";
 import { Render } from "./render.js";
 import { ToolHandler } from "./toolHandler.js";
 
@@ -32,3 +33,14 @@ function loop() {
     requestAnimationFrame(loop);
 }
 loop();
+
+// let pQ = new PriorityQueue( (elem) => {
+//     // console.log("did eval");
+//     return elem} );
+
+// pQ.enqueue(1);
+// pQ.enqueue(10);
+// pQ.enqueue(3);
+// pQ.enqueue(20);
+// pQ.enqueue(12);
+// pQ.print();

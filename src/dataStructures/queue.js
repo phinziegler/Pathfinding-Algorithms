@@ -1,4 +1,4 @@
-import { LinkedList } from "./linkedList.js";
+import { LinkedList, LLNode } from "./linkedList.js";
 export{ Queue };
 // FIFO
 class Queue {

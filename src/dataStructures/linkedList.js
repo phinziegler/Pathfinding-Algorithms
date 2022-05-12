@@ -1,6 +1,6 @@
-export { LinkedList };
+export { LinkedList, LLNode };
 // DOUBLY LINKED LIST
-class Node {
+class LLNode {
     constructor(element) {
         this.element = element;
         this.next = null;
@@ -15,7 +15,7 @@ class LinkedList {
     }
 
     addFront(element) {
-        let node = new Node(element);
+        let node = new LLNode(element);
         if(this.length == 0) {
             this.head = node;
             this.end = node;
@@ -30,7 +30,7 @@ class LinkedList {
     }
 
     addEnd(element) {
-        let node = new Node(element);
+        let node = new LLNode(element);
         if(this.length == 0) {
             this.head = node;
             this.end = node;
