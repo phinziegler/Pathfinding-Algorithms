@@ -51,6 +51,9 @@ class Tile {
     getParent() {
         return this.parent;
     }
+    getCoordinates() {
+        return this.coordinate;
+    }
 
 
     isWall() {

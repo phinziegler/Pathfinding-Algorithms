@@ -212,6 +212,42 @@ class Search {
         this.solutionFrames.push(solutionTilesRow);
     }
 
+
+    /*  A* SEARCH
+
+    https://mat.uab.cat/~alseda/MasterOpt/AStar-Algorithm.pdf
+
+    1.  put start node in OPEN list with f(nod_start) = h(node_start)
+    2.  while the OPEN list is NOT empty {
+            take the node from the open list with the LOWEST...
+                {f(nodeCurrent)} = g(nodeCurrent) + h(nodeCurrent)
+
+            if nodeCurrent is goalNode, solution found, return.
+
+            generate each state nodeSuccessor that come after node_current.
+
+            for each nodeSuccessor of nodeCurrent {
+                set successorCost to g(nodeCurrent) + w(nodeCurrent, nodeSuccessor) // ???
+
+                if nodeSuccessor is in OPEN list {
+                    if g(nodeSuccessor) <= successorCost... GO TO PEEPEE
+                }
+                else if nodeSuccessor is in the CLOSED list {
+                    if g(nodeSuccessor) <= successorCost... GO TO PEEPEE
+                    otherwise, move nodeSuccessor form CLOSED to OPEN
+                }
+                else {
+                    add nodeSuccessor to OPEN
+                    set h(nodeSuccessor to be the heuristic distance to nodeGoal)
+                }
+                set g(nodeSuccessor) = successorCost
+                set the parent of nodeSuccessor to nodeCurrent
+            }
+            add nodeCurrent to the CLOSED list
+        }
+        if(nodeCurrent != nodeGoal) ERROR --> open list empty, no solution found.
+
+    */
     aStar(tileArray) {
          // Dont do anything if there are no start tiles
          if(this.startTiles.length == 0) {
@@ -236,7 +272,24 @@ class Search {
     }
 
     heuristic(tile) {
+        let min = Infinity;
+        let coords1 = tile.getCoordinates();
+        let x1 = coords1.getX();
+        let y1 = coords1.getY();
 
+        this.goalTiles.forEach(goal => {
+            let coords2 = goal.getCoordinates();
+            let x2 = coords2.getX();
+            let y2 = coords2.getY();
+
+            let val = Math.abs(x2 - x1) + Math.abs(y2 - y1);
+
+            if(val < min) {
+                min = val;
+            }
+        });
+
+        return min;
     }
 
 }
