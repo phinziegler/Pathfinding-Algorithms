@@ -63,7 +63,6 @@ class ToolHandler {
     toolClick(id) {
         switch (id) {
             case "clear":           // 1
-                console.log("here");
                 this.clearTiles();
                 break;
 
@@ -81,11 +80,8 @@ class ToolHandler {
                         case "depthFirst":
                             search.depthFirst(this.engine.getTileArray());
                             break;
-                        case "bestFirst":
-                            // search.breadthFirst(this.engine.getTileArray());
-                            break;
                         case "aStar":
-                            // search.depthFirst(this.engine.getTileArray());
+                            search.aStar(this.engine.getTileArray());
                             break;
                     }
                 }

@@ -105,9 +105,9 @@ class Render {
                 this.colorFrontier(frontier);
                 this.colorVisited(visited);
                 break;
-            case "bestFirst":
-                break;
             case "aStar":
+                this.colorVisited(visited);
+                this.colorFrontier(frontier);
                 break;
         }
         solutionTiles.forEach(tile => {

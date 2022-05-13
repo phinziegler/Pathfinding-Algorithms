@@ -10,32 +10,40 @@ class QItem {
     }
 }
 
-// a priority queue which 
+/* THIS CLASS NEEDS TO BE REWORKED
+    It currently assumes that all data entered is IMMUTABLE, but this is
+    NOT appropriate for A*...
+
+    The sorting needs to occur through the entire list for each enqueue, OR the dequeue needs to extract the min some other way.
+*/
+
 class PriorityQueue extends Queue {
-    constructor(valueFunction) {
+    constructor(valueFunction, type="max") {
         super();
         this.valueFunction = valueFunction;
+        if(type == "max") {
+            this.multiplier = 1;
+        }
+        else if (type == "min") {
+            this.multiplier = -1;
+        }
         // compare function should be like...
         // valueOf(element) = #
     }
 
     enqueue(element) {
-        // console.log("enque " + element);
-        let qElement = new QItem(element, this.valueFunction(element));
+        let qElement = new QItem(element, this.multiplier * this.valueFunction(element));
         let newLLNode = new LLNode(qElement);
 
         let current = this.list.head;   // A QItem
         let prev = current;
 
         if (this.list.length == 0) {
-            // console.log('added' + element + " to front.");
-            // console.log("first elem");
             this.list.addFront(qElement);
             return;
         }
 
         while (current != null) {
-            // console.log("while");
             if (newLLNode.element.value >= current.element.value) {
                 this.list.length++;
                 if(current == this.list.head) {
@@ -43,7 +51,6 @@ class PriorityQueue extends Queue {
                     current.before = newLLNode;
                     newLLNode.before = null;
                     newLLNode.next = current;
-                    // console.log(`${qElement.element} is the new head.`);
                     return;
                 }
         
@@ -51,7 +58,6 @@ class PriorityQueue extends Queue {
                 newLLNode.next = current;
                 newLLNode.before = prev;
                 prev.next = newLLNode;
-                // console.log(`adding ${qElement.element} between ${prev.element.element} and ${current.element.element}`);
                 return;
             }
             prev = current;
@@ -62,7 +68,7 @@ class PriorityQueue extends Queue {
     }
 
     dequeue() {
-        return this.list.removeFront();
+        return this.list.removeFront().element;
     }
 
     print() {
@@ -73,6 +79,16 @@ class PriorityQueue extends Queue {
             current = current.next;
         }
         console.log(string);
+    }
+
+    toArray() {
+        let output = [];
+        let current = this.list.head;
+        while(current != null) {
+            output.push(current.element.element);
+            current = current.next;
+        }
+        return output;
     }
 
 }

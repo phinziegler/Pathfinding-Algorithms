@@ -33,14 +33,3 @@ function loop() {
     requestAnimationFrame(loop);
 }
 loop();
-
-// let pQ = new PriorityQueue( (elem) => {
-//     // console.log("did eval");
-//     return elem} );
-
-// pQ.enqueue(1);
-// pQ.enqueue(10);
-// pQ.enqueue(3);
-// pQ.enqueue(20);
-// pQ.enqueue(12);
-// pQ.print();

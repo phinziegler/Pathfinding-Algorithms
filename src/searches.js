@@ -1,4 +1,5 @@
 import { Queue } from "./dataStructures/queue.js";
+import { PriorityQueue } from "./dataStructures/priorityQueue.js";
 
 export { Search };
 class Search {
@@ -40,8 +41,8 @@ class Search {
     }
 
     clearNeighbors(tileArray) {
-        for(let r = 0; r < tileArray.length; r++) {
-            for(let c = 0; c < tileArray[r].length; c++) {
+        for (let r = 0; r < tileArray.length; r++) {
+            for (let c = 0; c < tileArray[r].length; c++) {
                 let tile = tileArray[r][c];
                 tile.setNeighbors([]);
             }
@@ -49,22 +50,22 @@ class Search {
     }
 
     generateNeighbors(tileArray) {  // CANNOT HAVE A NEIGHBOR THAT IS A START TILE
-        for(let r = 0; r < tileArray.length; r++) {
-            for(let c = 0; c < tileArray[r].length; c++) {
+        for (let r = 0; r < tileArray.length; r++) {
+            for (let c = 0; c < tileArray[r].length; c++) {
                 let tile = tileArray[r][c];
                 tile.setParent(null);
                 let neighbors = [];
 
-                if(r > 0 && !tileArray[r - 1][c].isStart()) {
+                if (r > 0 && !tileArray[r - 1][c].isStart()) {
                     neighbors.push(tileArray[r - 1][c]);
                 }
-                if(r < tileArray.length - 1 && !tileArray[r + 1][c].isStart()) {
+                if (r < tileArray.length - 1 && !tileArray[r + 1][c].isStart()) {
                     neighbors.push(tileArray[r + 1][c]);
                 }
-                if(c > 0 && !tileArray[r][c - 1].isStart()) {
+                if (c > 0 && !tileArray[r][c - 1].isStart()) {
                     neighbors.push(tileArray[r][c - 1]);
                 }
-                if(c < tileArray[r].length - 1 && !tileArray[r][c + 1].isStart()) {
+                if (c < tileArray[r].length - 1 && !tileArray[r][c + 1].isStart()) {
                     neighbors.push(tileArray[r][c + 1]);
                 }
                 // this.shuffleArray(neighbors);   // nicer aesthetic i guess
@@ -84,18 +85,18 @@ class Search {
     // BREADTH FIRST SEARCH
     breadthFirst(tileArray) {
         // Dont do anything if there are no start tiles
-        if(this.startTiles.length == 0) {
+        if (this.startTiles.length == 0) {
             console.log("No start position.");
             return;
         }
 
         // Find the neighbors of each tile.
         this.generateNeighbors(tileArray);
-        
+
         // Create frontier and visited list
         let frontier = new Queue();
         let visited = new Set();
-        
+
         // Populate visited
         this.startTiles.forEach(tile => {
             visited.add(tile);
@@ -106,17 +107,17 @@ class Search {
 
         let solutionTiles = [];         // used for render
 
-        while(!frontier.isEmpty()) {
+        while (!frontier.isEmpty()) {
             let v = frontier.dequeue();
             this.activeFrames.push(v);  // for render
 
-            if(v.isGoal()) {
+            if (v.isGoal()) {
                 console.log("found solution");
 
                 solutionTiles.push(v);
 
                 // end?
-                if(solutionTiles.length == this.goalTiles.length) {
+                if (solutionTiles.length == this.goalTiles.length) {
                     this.populateFrames(frontier.toArray(), visited, solutionTiles);        // for render
                     this.render.animateSearch(this.frontierFrames, this.visitedFrames, this.solutionFrames, this.activeFrames, this.engine, "breadthFirst");    // for render
                     return;
@@ -124,7 +125,7 @@ class Search {
                 // return;  // IF YOU RETURN HERE, YOU ONLY REVEAL THE SOLUTION TO THE NEAREST GOAL
             }
             v.getNeighbors().forEach(neighborTile => {
-                if(!neighborTile.isWall() && !visited.has(neighborTile)) {     
+                if (!neighborTile.isWall() && !visited.has(neighborTile)) {
                     frontier.enqueue(neighborTile);
                     visited.add(neighborTile);
                     neighborTile.setParent(v);      // used to track the path taken to that tile.
@@ -144,7 +145,7 @@ class Search {
     3. Create a list of that vertex's adjacent nodes. Add the ones which aren't in the visited list to the top of the stack.
     4. Keep repeating steps 2 and 3 until the stack is empty. */
     depthFirst(tileArray) {
-        if(this.startTiles.length == 0) {
+        if (this.startTiles.length == 0) {
             console.log("No start position.");
             return;
         }
@@ -163,33 +164,28 @@ class Search {
 
         let solutionTiles = [];
 
-        while(stack.length > 0) {
-            // console.log("here1");
-
+        while (stack.length > 0) {
             let v = stack.pop();
             visited.add(v);
 
             this.activeFrames.push(v);
 
-            if(v.isGoal()) {
+            if (v.isGoal()) {
                 console.log("found solution");
                 solutionTiles.push(v);
 
                 // End?
-                if(solutionTiles.length == this.goalTiles.length) {
+                if (solutionTiles.length == this.goalTiles.length) {
                     this.populateFrames(stack, visited, solutionTiles);        // for render
                     this.render.animateSearch(this.frontierFrames, this.visitedFrames, this.solutionFrames, this.activeFrames, this.engine, "depthFirst");    // for render
                     return;
                 }
             }
 
-            // console.log(v.getNeighbors());
             v.getNeighbors().forEach(neighborTile => {
-                if(!neighborTile.isWall() && !visited.has(neighborTile)) {   
+                if (!neighborTile.isWall() && !visited.has(neighborTile)) {
 
                     stack.push(neighborTile);
-                    // console.log("here2");
-                    // visited.add(neighborTile);
                     neighborTile.setParent(v);      // used to track the path taken to that tile.
                 }
             });
@@ -213,64 +209,112 @@ class Search {
     }
 
 
-    /*  A* SEARCH
-
-    https://mat.uab.cat/~alseda/MasterOpt/AStar-Algorithm.pdf
-
-    1.  put start node in OPEN list with f(nod_start) = h(node_start)
-    2.  while the OPEN list is NOT empty {
-            take the node from the open list with the LOWEST...
-                {f(nodeCurrent)} = g(nodeCurrent) + h(nodeCurrent)
-
-            if nodeCurrent is goalNode, solution found, return.
-
-            generate each state nodeSuccessor that come after node_current.
-
-            for each nodeSuccessor of nodeCurrent {
-                set successorCost to g(nodeCurrent) + w(nodeCurrent, nodeSuccessor) // ???
-
-                if nodeSuccessor is in OPEN list {
-                    if g(nodeSuccessor) <= successorCost... GO TO PEEPEE
-                }
-                else if nodeSuccessor is in the CLOSED list {
-                    if g(nodeSuccessor) <= successorCost... GO TO PEEPEE
-                    otherwise, move nodeSuccessor form CLOSED to OPEN
-                }
-                else {
-                    add nodeSuccessor to OPEN
-                    set h(nodeSuccessor to be the heuristic distance to nodeGoal)
-                }
-                set g(nodeSuccessor) = successorCost
-                set the parent of nodeSuccessor to nodeCurrent
-            }
-            add nodeCurrent to the CLOSED list
-        }
-        if(nodeCurrent != nodeGoal) ERROR --> open list empty, no solution found.
-
-    */
+    /*  A* SEARCH  */
     aStar(tileArray) {
-         // Dont do anything if there are no start tiles
-         if(this.startTiles.length == 0) {
+        // Dont do anything if there are no start tiles
+        if (this.startTiles.length == 0) {
             console.log("No start position.");
             return;
         }
 
+        // animation data
+        let solutionTiles = [];     // for rendering
+        let visited = [];           // for rendering
+
+        // Lookup table for tile g and h costs.
+        let costs = this.generateCostLookup(tileArray);
+        function lookup(tile) {
+            return costs[tile.getCoordinates().getX()][tile.getCoordinates().getY()];
+        }
+
         // Find the neighbors of each tile.
         this.generateNeighbors(tileArray);
-        
-        // Create frontier and visited list
-        let frontier = new Queue();
-        let visited = new Set();
-        
-        // Populate visited
+
+        // Create frontier --> uses a priority queue and a parallel Set. The addOpen function adds an element to both.
+        let openQueue = new PriorityQueue(tile => {
+            let info = lookup(tile);
+            let value = info.gCost + info.hCost;
+            return value;
+        }, "min");
+        let openSet = new Set();    // I'm gobbling memory but its faster for contains()
+        function addOpen(element) {
+            openSet.add(element);
+            openQueue.enqueue(element);
+        }
+
+        // Initialize the search using the start tiles.
         this.startTiles.forEach(tile => {
-            visited.add(tile);
+            addOpen(tile);
+            visited.push(tile);
+            let tileCost = lookup(tile);
+            tileCost.gCost = 0;
         });
-        this.startTiles.forEach(tile => {
-            frontier.enqueue(tile);
-        });
+            
+        while (!openQueue.isEmpty()) {
+
+            // grab lowest fCost item, and remove it from OPEN
+            let current = openQueue.dequeue();
+            openSet.delete(current);
+            this.activeFrames.push(current);
+            visited.push(current);
+            
+            // lookup the cost values of the item
+            let currCost = lookup(current);
+
+            // check if you found the solution
+            if (current.isGoal()) {
+                console.log("Found Solution");
+                solutionTiles.push(current);
+
+                this.populateFrames(openQueue.toArray(), visited, solutionTiles);
+                this.render.animateSearch(this.frontierFrames, this.visitedFrames, this.solutionFrames, this.activeFrames, this.engine, "aStar");
+
+
+                return;
+            }
+
+
+            // for ever neighbor tile of current...
+            current.getNeighbors().forEach(neighbor => {
+                if (!neighbor.isWall()) {                   // first of all, check that the neighbor is not a wall. If it is not a wall....
+                    let neighborCost = lookup(neighbor);
+
+                    let gGuess = currCost.gCost + 1;
+                    if (gGuess < neighborCost.gCost) {      // if true, you have found a shorter path to this node.
+                        neighbor.setParent(current);
+                        neighborCost.gCost = gGuess;
+
+                        if (!openSet.has(neighbor)) {
+                            addOpen(neighbor);
+                        }
+                    }
+                }
+            });
+            this.populateFrames(openQueue.toArray(), visited, solutionTiles);
+        }
+        this.render.animateSearch(this.frontierFrames, this.visitedFrames, this.solutionFrames, this.activeFrames, this.engine, "aStar");
+        console.log("complete");
     }
 
+    // Generate a lookup table for the tile costs, used by A*
+    generateCostLookup(tileArray) {
+        let table = [];
+        for (let r = 0; r < tileArray.length; r++) {         // for each row
+            let row = [];
+            for (let c = 0; c < tileArray[r].length; c++) {  // for each col
+                let tableObject = {
+                    tile: tileArray[c][r],
+                    gCost: Infinity,
+                    hCost: this.heuristic(tileArray[c][r]),
+                }
+                row.push(tableObject);
+            }
+            table.push(row);
+        }
+        return table;
+    }
+
+    // Manhattan Distance Heuristic used by A*
     heuristic(tile) {
         let min = Infinity;
         let coords1 = tile.getCoordinates();
@@ -284,7 +328,7 @@ class Search {
 
             let val = Math.abs(x2 - x1) + Math.abs(y2 - y1);
 
-            if(val < min) {
+            if (val < min) {
                 min = val;
             }
         });

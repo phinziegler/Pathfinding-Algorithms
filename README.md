@@ -9,9 +9,7 @@ This project allow the user to visualize various search algorithms on a grid, an
     <ul>
       <li>Breadth First (Done)
       <li>Depth First (Done)
-      <li>Best First
-      <li>A* Search
-      <li>Beam Search
+      <li>A* Search (Done)
       <li>etc
     </ul>
   <li>Animate search. (Done)
