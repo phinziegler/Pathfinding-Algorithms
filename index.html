@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="style.css">
     <script defer type="module" src="src/script.js"></script>
     <script src="https://kit.fontawesome.com/73970ed689.js" crossorigin="anonymous"></script>
+    <script defer src="src/menuHandler.js"></script>
 
     <title>Pathfinding Algorithms</title>
 </head>
@@ -21,23 +22,25 @@
         <!-- <p>by Phineas Ziegler</p> -->
     </section>
     <div class="toolbar left">
-        <i id="clear"class="far fa-window-close" title="Clear all"></i>
-        <i id="erase"class="fas fa-eraser" title="Erase tile"></i>
+        <i id="clear" class="far fa-window-close" title="Clear all"></i>
+        <i id="erase" class="fas fa-eraser" title="Erase tile"></i>
         <hr>
-        <i id="wall"class="fas fa-stop" title="Add walls"></i>
-        <i id="start"class="fas fa-map-marker" title="Place start"></i>
-        <i id="goal"class="fas fa-flag-checkered" title="Place goal"></i>
+        <i id="wall" class="fas fa-stop" title="Add walls"></i>
+        <i id="start" class="fas fa-map-marker" title="Place start"></i>
+        <i id="goal" class="fas fa-flag-checkered" title="Place goal"></i>
+        
+        <i id="infoPageOpen"class="fa-solid fa-circle-info" title="Info"></i>
     </div>
     <div class="toolbar right">
-        <i id="zoom-out"class="fas fa-search-minus" title="Zoom out"></i>
-        <i id="zoom-in"class="fas fa-search-plus" title="Zoom in"></i>
+        <i id="zoom-out" class="fas fa-search-minus" title="Zoom out"></i>
+        <i id="zoom-in" class="fas fa-search-plus" title="Zoom in"></i>
         <hr>
-        <i id="drag"class="fas fa-hand-paper" title="Drag viewport"></i>
+        <i id="drag" class="fas fa-hand-paper" title="Drag viewport"></i>
         <hr>
-        <i id="search"class="fas fa-play" title="Begin search"></i>
+        <i id="search" class="fas fa-play" title="Begin search"></i>
         <div id="options">
-            <input id="speed"type="number"value="1"min="0"step=".5"title="Animation speed (x60 fps)">
-            <select name="Algorithm" id="algorithm"title="Search algorithm">
+            <input id="speed" type="number" value="1" min="0" step=".5" title="Animation speed (x60 fps)">
+            <select name="Algorithm" id="algorithm" title="Search algorithm">
                 <option value="breadthFirst">Breadth First</option>
                 <option value="depthFirst">Depth First</option>
                 <option value="aStar">A*</option>
@@ -45,5 +48,102 @@
         </div>
     </div>
 
+    <div id="infoPage">
+        <i id="infoPageClose"class="fa-solid fa-xmark"></i>
+        <h1>Information</h1>
+        <!-- <hr class="infoHR"> -->
+        <h2>Tutorial</h2>
+        <hr class="infoHR">
+        <p>
+            The left panel contains tools for drawing mazes, and determining thier start and end points. The right panel
+            contains tools for manipulating the canvas, and choosing options.
+        </p>
+        <div id="instructions-wrapper">
+            <div class="instruction">
+                <h3>Left Panel</h3>
+                <hr class="infoHR">
+
+                <ul>
+                    <li>
+                        <i id="clear" class="far fa-window-close" title="Clear all"></i>
+                        Clears all tiles
+                    </li>
+                    <li>
+                        <i id="erase" class="fas fa-eraser" title="Erase tile"></i>
+                        Clear individual tiles
+                    </li>
+                    <li>
+                        <i id="wall" class="fas fa-stop" title="Add walls"></i>
+                        Draw maze walls
+                    </li>
+                    <li>
+                        <i id="start" class="fas fa-map-marker" title="Place start"></i>
+                        Draw start position(s)
+                    </li>
+                    <li>
+                        <i id="goal" class="fas fa-flag-checkered" title="Place goal"></i>
+                        Draw end position(s)
+                    </li>
+                </ul>
+            </div>
+
+            <div class="instruction">
+                <h3>Right Panel</h3>
+                <hr class="infoHR">
+
+                <ul>
+                    <li>
+                        <i id="zoom-out" class="fas fa-search-minus" title="Zoom out"></i>
+                        Zoom out
+                    </li>
+                    <li>
+                        <i id="zoom-in" class="fas fa-search-plus" title="Zoom in"></i>
+                        Zoom in
+                    </li>
+                    <li>
+                        <i id="drag" class="fas fa-hand-paper" title="Drag viewport"></i>
+                        Move canvas
+                    </li>
+                    <li>
+                        <i id="search" class="fas fa-play" title="Begin search"></i>
+                        Play/clear simulation
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-hashtag"></i>
+                        Change animation speed
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-list-ul"></i>
+                        Change algorithm
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <h2>About/Contact</h2>
+        <hr class="infoHR">
+        <p>
+            This website allows you to visualize various pathfinding algorithms, so that you can better understand their behavior.<br>
+            If you find any errors, or want to reach out for any reason, my information and website can be found below.
+        </p>
+        <p >
+            <i class="fab fa-github"></i> <a href="https://github.com/phinziegler/Pathfinding-Algorithms"
+                target="_blank">Repository</a>
+        </p>
+
+        <!-- email link -->
+        <p >
+            <i class="far fa-envelope"></i> <a href="mailto: phinziegler@gmail.com"
+                target="_blank">phinziegler@gmail.com</a>
+        </p>
+
+        <!-- portfolio link -->
+        <p >
+            <i class="fas fa-folder-open"></i> <a href="https://phinziegler.github.io/Personal-Website/"
+                target="_blank">Portfolio</a>
+        </p>
+        <div id="panelFooter">&copy; Phineas Ziegler, 2022</div>
+    </div>
+
 </body>
+
 </html>

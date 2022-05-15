@@ -17,7 +17,7 @@ class InputHandler {
             }
         });
 
-        document.addEventListener("wheel", (e) => {
+        canvas.addEventListener("wheel", (e) => {
             if(e.wheelDelta > 0) {
                 engine.zoomIn();
                 return;
