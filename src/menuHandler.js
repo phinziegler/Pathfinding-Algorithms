@@ -9,8 +9,6 @@ buttonClose.addEventListener("click", () => {
 });
 
 buttonOpen.addEventListener("click", () => {
-    if(page.classList.contains("invisible")) {
-        page.classList.toggle("invisible");
-    }
+    page.classList.toggle("invisible");
 });
 
