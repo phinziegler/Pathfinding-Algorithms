@@ -22,5 +22,6 @@ This project allow the user to visualize various search algorithms on a grid, an
   <li>Can change animation speed in the middle of an animation. (Done)
   <li>Add a way to select between search algorithms. (Done)
   <li>Tutorial/info page. (Done)
+  <li>Rework A*'s priority queue. Currently produces unoptimal results (only when using multiple start points) due to an incorrect sorting technique.
   <li>Zoom/unzoom should be bound to the center of the window, not the center of the board.
   <li>Optimize: namely, changing forEach into for loops.
