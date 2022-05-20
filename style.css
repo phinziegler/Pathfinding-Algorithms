@@ -225,14 +225,14 @@ h3 {
 
 a,
 a:visited {
-    color: inherit;
+    color: var(--accent);
     text-decoration: none;
     transition: color 0.1s;
 }
 
 a:hover,
 a:active {
-    color: var(--accent);
+    text-decoration: underline;
 }
 
 #panelFooter {
