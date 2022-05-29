@@ -295,9 +295,15 @@ class Search {
         for (let r = 0; r < tileArray.length; r++) {         // for each row
             let row = [];
             for (let c = 0; c < tileArray[r].length; c++) {  // for each col
+
+                let g = Infinity;
+                if(tileArray[c][r].isStart()) {
+                    g = 0;
+                }
+
                 let tableObject = {
                     tile: tileArray[c][r],
-                    gCost: Infinity,
+                    gCost: g,
                     hCost: this.heuristic(tileArray[c][r]),
                 }
                 row.push(tableObject);
