@@ -185,6 +185,11 @@ h3 {
     text-align: center;
 }
 
+* {
+    scrollbar-width: auto;
+    scrollbar-color: var(--color3) #c08c8c00;
+  }
+
 ::-webkit-scrollbar {
     width: 16px;
 }
