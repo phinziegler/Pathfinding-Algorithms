@@ -1,7 +1,5 @@
 import { Engine } from "./engine.js";
 import { InputHandler } from "./inputHandler.js";
-import { LinkedList } from "./dataStructures/linkedList.js";
-import { PriorityQueue } from "./dataStructures/priorityQueue.js";
 import { Render } from "./render.js";
 import { ToolHandler } from "./toolHandler.js";
 
@@ -32,4 +30,5 @@ function doResize() {
 function loop() {
     requestAnimationFrame(loop);
 }
+
 loop();
