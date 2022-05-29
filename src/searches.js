@@ -115,13 +115,9 @@ class Search {
                 console.log("found solution");
 
                 solutionTiles.push(v);
-
-                // end?
-                if (solutionTiles.length == this.goalTiles.length) {
-                    this.populateFrames(frontier.toArray(), visited, solutionTiles);        // for render
-                    this.render.animateSearch(this.frontierFrames, this.visitedFrames, this.solutionFrames, this.activeFrames, this.engine, "breadthFirst");    // for render
-                    return;
-                }
+                this.populateFrames(frontier.toArray(), visited, solutionTiles);        // for render
+                this.render.animateSearch(this.frontierFrames, this.visitedFrames, this.solutionFrames, this.activeFrames, this.engine, "breadthFirst");    // for render
+                return;
                 // return;  // IF YOU RETURN HERE, YOU ONLY REVEAL THE SOLUTION TO THE NEAREST GOAL
             }
             v.getNeighbors().forEach(neighborTile => {
@@ -174,12 +170,9 @@ class Search {
                 console.log("found solution");
                 solutionTiles.push(v);
 
-                // End?
-                if (solutionTiles.length == this.goalTiles.length) {
-                    this.populateFrames(stack, visited, solutionTiles);        // for render
-                    this.render.animateSearch(this.frontierFrames, this.visitedFrames, this.solutionFrames, this.activeFrames, this.engine, "depthFirst");    // for render
-                    return;
-                }
+                this.populateFrames(stack, visited, solutionTiles);        // for render
+                this.render.animateSearch(this.frontierFrames, this.visitedFrames, this.solutionFrames, this.activeFrames, this.engine, "depthFirst");    // for render
+                return;
             }
 
             v.getNeighbors().forEach(neighborTile => {
@@ -249,7 +242,7 @@ class Search {
             let tileCost = lookup(tile);
             tileCost.gCost = 0;
         });
-            
+
         while (!openQueue.isEmpty()) {
 
             // grab lowest fCost item, and remove it from OPEN
@@ -257,7 +250,7 @@ class Search {
             openSet.delete(current);
             this.activeFrames.push(current);
             visited.push(current);
-            
+
             // lookup the cost values of the item
             let currCost = lookup(current);
 
